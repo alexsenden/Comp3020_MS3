@@ -10,7 +10,7 @@ class SmallIcon extends React.Component {
             <div className="icon-block">
                 <img className="icon" src={this.props.movie.coverRoute} alt="Happy Gilmore Cover"/>
                 <div className="icon-text">{this.props.movie.title}</div>
-                <input className="small-x-button" type="image" src={xButtonIcon} alt="X"></input>
+                <input className="small-x-button" type="image" src={xButtonIcon} alt="X" onClick={this.props.onClick}></input>
             </div>
         );
     }
@@ -30,16 +30,16 @@ class SmallIconCollection extends React.Component {
         this.setState({movieList: item});
     }
 
+    removeItem(item) {
+        let newState = this.state.movieList.splice(item, 1);
+        this.setState(newState);
+    }
+
     render() {
+        let listItems = this.state.movieList.map((m, idx) => <li key={idx}><SmallIcon movie={m} onClick={() => this.removeItem(idx)} /></li>);
         return (
             <div className="small-icon-collection">
-                {this.state.movieList.map(function(m, idx) {
-                    return (
-                        <li key={idx}>
-                            <SmallIcon movie={m} />
-                        </li>
-                    )
-                })}
+                {listItems}
             </div>
         );
     }
