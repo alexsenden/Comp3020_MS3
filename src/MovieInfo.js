@@ -1,6 +1,6 @@
-import HappyGilmoreCover from './HappyGilmoreCover.jpg'
-import AlienCover from './AlienCover.jpg'
-import MinionsCover from './MinionsCover.jpg'
+import HappyGilmoreCover from './images/HappyGilmoreCover.jpg'
+import AlienCover from './images/AlienCover.jpg'
+import MinionsCover from './images/MinionsCover.jpg'
 
 export const movieInfo = {
     Alien: {
