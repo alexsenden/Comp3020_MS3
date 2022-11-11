@@ -19,13 +19,6 @@ class SmallIcon extends React.Component {
 }
 
 class SmallIconCollection extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            movieList: "hehe"
-        };
-    }
-
     render() {
         let listItems = this.props.movieList.map((m, idx) => <li key={idx}><SmallIcon movie={m} onClick={() => this.props.removeItem(idx)} /></li>);
         return (
@@ -74,7 +67,7 @@ class SidePanel extends React.Component {
 
     undoList() {
         if(this.state.movieListHistory.length == 0) return;
-        
+
         this.setState({
             movieList: this.state.movieListHistory.pop(),
             movieListHistory: this.state.movieListHistory,
