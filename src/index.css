@@ -24,11 +24,25 @@ li {
     display: -webkit-flex;
     display: flex;
     align-items: center;
-    width: 250px;
+    width: 90%;
     height: 100px;
     border: 2px solid #e3e3e3;
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 5%;
+}
+
+.small-icon-collection {
+    height: 75vh;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.small-icon-collection::-webkit-scrollbar {
+    width: 2px;
+    background: transparent;
+}
+.small-icon-collection::-webkit-scrollbar-thumb {
+    background: #e3e3e3;
 }
 
 .small-x-button {
@@ -38,4 +52,34 @@ li {
     width: 20px;
     margin-left: auto;
     margin-right: 10px;
+}
+
+.sidepanel-label {
+    font: 24px "Century Gothic", Futura, sans-serif;
+    font-weight: bold;
+    margin-left: 16px;
+}
+
+.sidepanel {
+    width: 22%;
+}
+
+.sidepanel-control-buttons {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 85%;
+}
+
+.sidepanel-undo {
+    float: right;
+    width: 30px;
+    height: 25px;
+}
+
+.sidepanel-clear {
+    width: 50px;
+    height: 25px;
 }
