@@ -92,9 +92,33 @@ li {
     margin-right: auto;
 }
 
-.screen {
+.content {
     display: -webkit-flex;
     display: flex;
     align-items: center;
     justify-content: space-between
+}
+
+.bottom-bar {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.liked-toggle {
+    height: 50px;
+    width: 50px;
+    margin-left: 8vw;
+}
+
+.watched-toggle {
+    height: 50px;
+    width: 50px;
+    margin-right: 8vw;
+}
+
+.searchbar {
+    height: 30px;
+    width: 50vw;
 }

@@ -5,6 +5,8 @@ import { movieInfo } from './MovieInfo';
 import xButtonIcon from './images/X.png';
 import undoButton from './images/undobutton.png';
 import clearButton from './images/clearbutton.png';
+import likedButton from './images/liked.png'
+import watchedButton from './images/history.png'
 
 class SmallIcon extends React.Component {
     render() {
@@ -45,7 +47,21 @@ class SidePanel extends React.Component {
 }
 
 class BottomBar extends React.Component {
-
+    render() {
+        return (
+            <div className="bottom-bar">
+                <div>
+                    <input className="liked-toggle" type="image" src={likedButton} alt="Liked" onClick={this.props.clearList}></input>
+                </div>
+                <div>
+                    <input className="searchbar" type="text" alt="Search Bar" placeholder="Search Movies..."></input>
+                </div>
+                <div>
+                    <input className="watched-toggle" type="image" src={watchedButton} alt="History" onClick={this.props.clearList}></input>
+                </div>
+            </div>
+        );
+    }
 }
 
 class Screen extends React.Component {
@@ -146,9 +162,14 @@ class Screen extends React.Component {
 
     render() {
         return (
-            <div className='screen'>
-                <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike} />
-                <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} />
+            <div>
+                <div className='content'>
+                    <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike} />
+                    <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} />
+                </div>
+                <div>
+                    <BottomBar />
+                </div>
             </div>
         );
     }
