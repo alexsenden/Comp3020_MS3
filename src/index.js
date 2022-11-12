@@ -73,10 +73,10 @@ class CentrePanel extends React.Component {
     render() {
         return (
             <div className="centre-panel">
-                <video className="trailer" autoPlay loop controls onClick={() => {console.log("watch!"); }}>
+                <video className="trailer" key={this.props.movie.title} autoPlay loop controls>
                     <source src={this.props.movie.trailer}></source>
                 </video> 
-                <CentrePanelControls />
+                <CentrePanelControls onLike={this.props.onLike} onWatch={this.props.onWatch} onDislike={this.props.onDislike}/>
                 <h2 className="title">
                     {this.props.movie.title}
                 </h2>
@@ -94,13 +94,13 @@ class CentrePanelControls extends React.Component {
         return (
             <div className="centre-panel-controls">
                 <div>
-                    <input className="dislike-button" type="image" src={dislikeButton} alt="Dislike" onClick={this.props.dislikeMovie}></input>
+                    <input className="dislike-button" type="image" src={dislikeButton} alt="Dislike" onClick={this.props.onDislike}></input>
                 </div>
                 <div>
-                    <input className="watch-button" type="image" src={watchButton} alt="Watch" onClick={this.props.watchMovie}></input>
+                    <input className="watch-button" type="image" src={watchButton} alt="Watch" onClick={this.props.onWatch}></input>
                 </div>
                 <div>
-                    <input className="like-button" type="image" src={likeButton} alt="Like" onClick={this.props.likeMovie}></input>
+                    <input className="like-button" type="image" src={likeButton} alt="Like" onClick={() => {this.props.onLike()}}></input>
                 </div>
             </div>
         );
@@ -112,33 +112,46 @@ class Screen extends React.Component {
         super(props);
 
         this.state = {
-            currentMovie: movieInfo.HappyGilmore,
+            currentMovie: movieInfo[1],
             likedToggle: true,
             watchedToggle: true,
-            likedList: [movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru],
+            likedList: [movieInfo[1]],
             likedHistory: [],
-            watchedList: [movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru],
+            watchedList: [],
             watchedHistory: [],
         };
 
-        this.addLike = this.addLike.bind(this);
+        this.onLike = this.onLike.bind(this);
         this.removeLike = this.removeLike.bind(this);
         this.clearLike = this.clearLike.bind(this);
         this.undoLike = this.undoLike.bind(this);
 
-        this.addWatch = this.addWatch.bind(this);
+        this.onWatch = this.onWatch.bind(this);
         this.removeWatch = this.removeWatch.bind(this);
         this.clearWatch = this.clearWatch.bind(this);
         this.undoWatch = this.undoWatch.bind(this);
 
         this.toggleLiked = this.toggleLiked.bind(this);
         this.toggleWatched = this.toggleWatched.bind(this);
+
+        this.newMovie = this.newMovie.bind(this);
+
+        this.setLikeListWithHistory = this.setLikeListWithHistory.bind(this);
     }
 
     addLike(item) {
-        let newState = this.state.likedList.slice();
-        newState.push(item);
-        this.setLikeListWithHistory(newState);
+        let newList = this.state.likedList.slice();
+        newList.push(item);
+        console.log(newList);
+        this.setState((currState) => {return ({
+            currentMovie: currState.currentMovie,
+            likedToggle: currState.likedToggle,
+            watchedToggle: currState.watchedToggle,
+            likedList: newList,
+            likedHistory: currState.likedHistory,
+            watchedList: currState.watchedList,
+            watchedHistory: currState.watchedHistory,
+        })}, () => console.log(this.state.likedList));
     }
 
     removeLike(index) {
@@ -245,6 +258,34 @@ class Screen extends React.Component {
         });
     }
 
+    newMovie() {
+        let nextMovie = this.state.currentMovie;
+
+        while(nextMovie == this.state.currentMovie) {
+            nextMovie = movieInfo[Math.floor(Math.random() * movieInfo.length)];
+        }
+
+        this.setState({
+            currentMovie: nextMovie,
+            likedToggle: this.state.likedToggle,
+            watchedToggle: this.state.watchedToggle,
+            likedList: this.state.likedList,
+            likedHistory: this.state.likedHistory,
+            watchedList: this.state.watchedList,
+            watchedHistory: this.state.watchedHistory,
+        });
+    }
+
+    onLike() {
+        this.addLike(this.state.currentMovie);
+        this.newMovie();
+    }
+
+    onWatch() {
+        this.addWatch(this.state.currentMovie);
+        this.newMovie();
+    }
+
     render() {
         let likedPanel = this.state.likedToggle ? <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike}/> : <div className="liked-sidepanel"><div className="sidepanel"/></div>;
         let watchedPanel = this.state.watchedToggle ? <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} /> : <div className="watched-sidepanel"><div className="sidepanel"/></div>
@@ -253,7 +294,7 @@ class Screen extends React.Component {
             <div>
                 <div className='content'>
                     {likedPanel}
-                    <CentrePanel movie={this.state.currentMovie}/>
+                    <CentrePanel movie={this.state.currentMovie} onLike={this.onLike} onWatch={this.onWatch} onDislike={this.newMovie}/>
                     {watchedPanel}
                 </div>
                 <div>
