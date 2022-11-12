@@ -83,3 +83,18 @@ li {
     width: 50px;
     height: 25px;
 }
+
+.watched-sidepanel {
+    margin-left: auto;
+}
+
+.liked-sidepanel {
+    margin-right: auto;
+}
+
+.screen {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
