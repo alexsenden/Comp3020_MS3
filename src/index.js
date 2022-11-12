@@ -7,8 +7,11 @@ import { movieInfo } from './MovieInfo';
 import xButtonIcon from './images/X.png';
 import undoButton from './images/undobutton.png';
 import clearButton from './images/clearbutton.png';
-import likedButton from './images/liked.png'
-import watchedButton from './images/history.png'
+import likedButton from './images/liked.png';
+import watchedButton from './images/history.png';
+import likeButton from './images/like.png';
+import dislikeButton from './images/dislike.png';
+import watchButton from './images/watch.png';
 
 class SmallIcon extends React.Component {
     render() {
@@ -73,6 +76,7 @@ class CentrePanel extends React.Component {
                 <video className="trailer" autoPlay loop controls onClick={() => {console.log("watch!"); }}>
                     <source src={this.props.movie.trailer}></source>
                 </video> 
+                <CentrePanelControls />
                 <h2 className="title">
                     {this.props.movie.title}
                 </h2>
@@ -80,6 +84,24 @@ class CentrePanel extends React.Component {
                 <p className="description">
                     {this.props.movie.description}
                 </p>
+            </div>
+        );
+    }
+}
+
+class CentrePanelControls extends React.Component {
+    render() {
+        return (
+            <div className="centre-panel-controls">
+                <div>
+                    <input className="dislike-button" type="image" src={dislikeButton} alt="Dislike" onClick={this.props.dislikeMovie}></input>
+                </div>
+                <div>
+                    <input className="watch-button" type="image" src={watchButton} alt="Watch" onClick={this.props.watchMovie}></input>
+                </div>
+                <div>
+                    <input className="like-button" type="image" src={likeButton} alt="Like" onClick={this.props.likeMovie}></input>
+                </div>
             </div>
         );
     }
