@@ -70,8 +70,7 @@ class CentrePanel extends React.Component {
     render() {
         return (
             <div className="centre-panel">
-                <iframe src="https://olafwempe.com/mp3/silence/silence.mp3" type="audio/mp3" allow="autoplay" style={{display: 'none'}}></iframe>
-                <video className="trailer" autoPlay loop onClick={() => {console.log("watch!"); }}>
+                <video className="trailer" autoPlay loop controls onClick={() => {console.log("watch!"); }}>
                     <source src={this.props.movie.trailer}></source>
                 </video> 
                 <h2 className="title">
@@ -225,8 +224,8 @@ class Screen extends React.Component {
     }
 
     render() {
-        let likedPanel = this.state.likedToggle ? <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike}/> : <div className="liked-sidepanel"/>;
-        let watchedPanel = this.state.watchedToggle ? <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} /> : <div className="watched-sidepanel" />
+        let likedPanel = this.state.likedToggle ? <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike}/> : <div className="liked-sidepanel"><div className="sidepanel"/></div>;
+        let watchedPanel = this.state.watchedToggle ? <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} /> : <div className="watched-sidepanel"><div className="sidepanel"/></div>
 
         return (
             <div>
