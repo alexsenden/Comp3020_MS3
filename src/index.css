@@ -120,5 +120,41 @@ li {
 
 .searchbar {
     height: 30px;
-    width: 50vw;
+    width: 40vw;
+}
+
+.centre-panel {
+    width: 40vw;
+    height: 75vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.centre-panel::-webkit-scrollbar {
+    width: 2px;
+    background: transparent;
+}
+.centre-panel::-webkit-scrollbar-thumb {
+    background: #e3e3e3;
+}
+
+.trailer {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40vw;
+}
+
+.title {
+    margin-bottom: 8px;
+}
+
+.rating {
+    height: 20px;
+    width: 108px;
+}
+
+.description {
+    margin-top: 5px;
 }

@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+
 import { movieInfo } from './MovieInfo';
+
 import xButtonIcon from './images/X.png';
 import undoButton from './images/undobutton.png';
 import clearButton from './images/clearbutton.png';
@@ -51,14 +53,34 @@ class BottomBar extends React.Component {
         return (
             <div className="bottom-bar">
                 <div>
-                    <input className="liked-toggle" type="image" src={likedButton} alt="Liked" onClick={this.props.clearList}></input>
+                    <input className="liked-toggle" type="image" src={likedButton} alt="Liked" onClick={this.props.toggleLiked}></input>
                 </div>
                 <div>
                     <input className="searchbar" type="text" alt="Search Bar" placeholder="Search Movies..."></input>
                 </div>
                 <div>
-                    <input className="watched-toggle" type="image" src={watchedButton} alt="History" onClick={this.props.clearList}></input>
+                    <input className="watched-toggle" type="image" src={watchedButton} alt="History" onClick={this.props.toggleWatched}></input>
                 </div>
+            </div>
+        );
+    }
+}
+
+class CentrePanel extends React.Component {
+    render() {
+        return (
+            <div className="centre-panel">
+                <iframe src="https://olafwempe.com/mp3/silence/silence.mp3" type="audio/mp3" allow="autoplay" style={{display: 'none'}}></iframe>
+                <video className="trailer" autoPlay loop onClick={() => {console.log("watch!"); }}>
+                    <source src={this.props.movie.trailer}></source>
+                </video> 
+                <h2 className="title">
+                    {this.props.movie.title}
+                </h2>
+                <img className="rating" src={this.props.movie.rating} alt="Rating"/>
+                <p className="description">
+                    {this.props.movie.description}
+                </p>
             </div>
         );
     }
@@ -69,6 +91,9 @@ class Screen extends React.Component {
         super(props);
 
         this.state = {
+            currentMovie: movieInfo.HappyGilmore,
+            likedToggle: true,
+            watchedToggle: true,
             likedList: [movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru],
             likedHistory: [],
             watchedList: [movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru, movieInfo.Alien, movieInfo.HappyGilmore, movieInfo.MinionsRiseOfGru],
@@ -84,6 +109,9 @@ class Screen extends React.Component {
         this.removeWatch = this.removeWatch.bind(this);
         this.clearWatch = this.clearWatch.bind(this);
         this.undoWatch = this.undoWatch.bind(this);
+
+        this.toggleLiked = this.toggleLiked.bind(this);
+        this.toggleWatched = this.toggleWatched.bind(this);
     }
 
     addLike(item) {
@@ -105,6 +133,9 @@ class Screen extends React.Component {
     setLikeListWithHistory(newList) {
         this.state.likedHistory.push(this.state.likedList);
         this.setState({
+            currentMovie: this.state.currentMovie,
+            likedToggle: this.state.likedToggle,
+            watchedToggle: this.state.watchedToggle,
             likedList: newList,
             likedHistory: this.state.likedHistory,
             watchedList: this.state.watchedList,
@@ -116,6 +147,9 @@ class Screen extends React.Component {
         if(this.state.likedHistory.length == 0) return;
 
         this.setState({
+            currentMovie: this.state.currentMovie,
+            likedToggle: this.state.likedToggle,
+            watchedToggle: this.state.watchedToggle,
             likedList: this.state.likedHistory.pop(),
             likedHistory: this.state.likedHistory,
             watchedList: this.state.watchedList,
@@ -142,6 +176,9 @@ class Screen extends React.Component {
     setWatchedListWithHistory(newList) {
         this.state.watchedHistory.push(this.state.watchedList);
         this.setState({
+            currentMovie: this.state.currentMovie,
+            likedToggle: this.state.likedToggle,
+            watchedToggle: this.state.watchedToggle,
             likedList: this.state.likedList,
             likedHistory: this.state.likedHistory,
             watchedList: newList,
@@ -153,22 +190,53 @@ class Screen extends React.Component {
         if(this.state.watchedHistory.length == 0) return;
 
         this.setState({
+            currentMovie: this.state.currentMovie,
+            likedToggle: this.state.likedToggle,
+            watchedToggle: this.state.watchedToggle,
             likedList: this.state.likedList,
             likedHistory: this.state.likedHistory,
             watchedList: this.state.watchedHistory.pop(),
             watchedHistory: this.state.watchedHistory,
-        })
+        });
+    }
+
+    toggleLiked() {
+        this.setState({
+            currentMovie: this.state.currentMovie,
+            likedToggle: !this.state.likedToggle,
+            watchedToggle: this.state.watchedToggle,
+            likedList: this.state.likedList,
+            likedHistory: this.state.likedHistory,
+            watchedList: this.state.watchedList,
+            watchedHistory: this.state.watchedHistory,
+        });
+    }
+
+    toggleWatched() {
+        this.setState({
+            currentMovie: this.state.currentMovie,
+            likedToggle: this.state.likedToggle,
+            watchedToggle: !this.state.watchedToggle,
+            likedList: this.state.likedList,
+            likedHistory: this.state.likedHistory,
+            watchedList: this.state.watchedList,
+            watchedHistory: this.state.watchedHistory,
+        });
     }
 
     render() {
+        let likedPanel = this.state.likedToggle ? <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike}/> : <div className="liked-sidepanel"/>;
+        let watchedPanel = this.state.watchedToggle ? <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} /> : <div className="watched-sidepanel" />
+
         return (
             <div>
                 <div className='content'>
-                    <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike} />
-                    <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} />
+                    {likedPanel}
+                    <CentrePanel movie={this.state.currentMovie}/>
+                    {watchedPanel}
                 </div>
                 <div>
-                    <BottomBar />
+                    <BottomBar toggleLiked={this.toggleLiked} toggleWatched={this.toggleWatched}/>
                 </div>
             </div>
         );
