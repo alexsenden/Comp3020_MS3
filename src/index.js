@@ -131,10 +131,10 @@ class Screen extends React.Component {
         super(props);
 
         this.state = {
-            currentMovie: movieInfo[1],
+            currentMovie: movieInfo[0],
             likedToggle: true,
             watchedToggle: true,
-            likedList: [movieInfo[1]],
+            likedList: [],
             likedHistory: [],
             watchedList: [],
             watchedHistory: [],
