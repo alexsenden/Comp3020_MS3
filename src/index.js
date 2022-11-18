@@ -174,13 +174,8 @@ class Screen extends React.Component {
         this.state.likedHistory.push(this.state.likedList);
         this.state.likedList = newList;
         this.setState({
-            currentMovie: this.state.currentMovie,
-            likedToggle: this.state.likedToggle,
-            watchedToggle: this.state.watchedToggle,
+            ...this.state,
             likedList: newList,
-            likedHistory: this.state.likedHistory,
-            watchedList: this.state.watchedList,
-            watchedHistory: this.state.watchedHistory,
         });
     }
 
@@ -188,13 +183,8 @@ class Screen extends React.Component {
         if(this.state.likedHistory.length == 0) return;
 
         this.setState({
-            currentMovie: this.state.currentMovie,
-            likedToggle: this.state.likedToggle,
-            watchedToggle: this.state.watchedToggle,
-            likedList: this.state.likedHistory.pop(),
-            likedHistory: this.state.likedHistory,
-            watchedList: this.state.watchedList,
-            watchedHistory: this.state.watchedHistory,
+            ...this.state,
+            likedList: this.state.likedHistory.pop()
         })
     }
 
@@ -218,13 +208,8 @@ class Screen extends React.Component {
         this.state.watchedHistory.push(this.state.watchedList);
         this.state.watchedList = newList;
         this.setState({
-            currentMovie: this.state.currentMovie,
-            likedToggle: this.state.likedToggle,
-            watchedToggle: this.state.watchedToggle,
-            likedList: this.state.likedList,
-            likedHistory: this.state.likedHistory,
+            ...this.state,
             watchedList: newList,
-            watchedHistory: this.state.watchedHistory,
         });
     }
 
@@ -232,37 +217,22 @@ class Screen extends React.Component {
         if(this.state.watchedHistory.length == 0) return;
 
         this.setState({
-            currentMovie: this.state.currentMovie,
-            likedToggle: this.state.likedToggle,
-            watchedToggle: this.state.watchedToggle,
-            likedList: this.state.likedList,
-            likedHistory: this.state.likedHistory,
+            ...this.state,
             watchedList: this.state.watchedHistory.pop(),
-            watchedHistory: this.state.watchedHistory,
         });
     }
 
     toggleLiked() {
         this.setState({
-            currentMovie: this.state.currentMovie,
+            ...this.state,
             likedToggle: !this.state.likedToggle,
-            watchedToggle: this.state.watchedToggle,
-            likedList: this.state.likedList,
-            likedHistory: this.state.likedHistory,
-            watchedList: this.state.watchedList,
-            watchedHistory: this.state.watchedHistory,
         });
     }
 
     toggleWatched() {
         this.setState({
-            currentMovie: this.state.currentMovie,
-            likedToggle: this.state.likedToggle,
+            ...this.state,
             watchedToggle: !this.state.watchedToggle,
-            likedList: this.state.likedList,
-            likedHistory: this.state.likedHistory,
-            watchedList: this.state.watchedList,
-            watchedHistory: this.state.watchedHistory,
         });
     }
 
