@@ -17,9 +17,11 @@ class SmallIcon extends React.Component {
     render() {
         return (
             <div className="icon-block">
-                <img className="icon" src={this.props.movie.coverRoute} alt="Happy Gilmore Cover"/>
-                <div className="icon-text">{this.props.movie.title}</div>
-                <input className="small-x-button" type="image" src={xButtonIcon} alt="X" onClick={this.props.onClick}></input>
+                <div className="small-movie-info clickable">
+                    <img className="icon" src={this.props.movie.coverRoute} alt={this.props.movie.title + " Cover"}/>
+                    <div className="icon-text">{this.props.movie.title}</div>
+                </div>
+                <input className="small-x-button clickable" type="image" src={xButtonIcon} alt="X" onClick={this.props.removeItem}></input>
             </div>
         );
     }
@@ -27,7 +29,7 @@ class SmallIcon extends React.Component {
 
 class SmallIconCollection extends React.Component {
     render() {
-        let listItems = this.props.movieList.map((m, idx) => <li key={idx}><SmallIcon movie={m} onClick={() => this.props.removeItem(idx)} /></li>);
+        let listItems = this.props.movieList.map((m, idx) => <li onClick={() => this.props.setMovie(m)} key={idx}><SmallIcon movie={m} removeItem={() => this.props.removeItem(idx)} /></li>);
         return (
             <div className="small-icon-collection">
                 {listItems}
@@ -41,10 +43,10 @@ class SidePanel extends React.Component {
         return (
             <div className="sidepanel">
                 <div className="sidepanel-label">{this.props.label}</div>
-                <SmallIconCollection movieList={this.props.movieList} removeItem={this.props.removeItem}/>
+                <SmallIconCollection movieList={this.props.movieList} removeItem={this.props.removeItem} setMovie={this.props.setMovie}/>
                 <div className="sidepanel-control-buttons">
-                    <input className="sidepanel-clear" type="image" src={clearButton} alt="Clear" onClick={this.props.clearList}></input>
-                    <input className="sidepanel-undo" type="image" src={undoButton} alt="Undo" onClick={this.props.undoList}></input>
+                    <input className="sidepanel-clear clickable" type="image" src={clearButton} alt="Clear" onClick={this.props.clearList}></input>
+                    <input className="sidepanel-undo clickable" type="image" src={undoButton} alt="Undo" onClick={this.props.undoList}></input>
                 </div>
             </div>
         );
@@ -56,13 +58,13 @@ class BottomBar extends React.Component {
         return (
             <div className="bottom-bar">
                 <div>
-                    <input className="liked-toggle" type="image" src={likedButton} alt="Liked" onClick={this.props.toggleLiked}></input>
+                    <input className="liked-toggle clickable" type="image" src={likedButton} alt="Liked" onClick={this.props.toggleLiked}></input>
                 </div>
                 <div>
                     <input className="searchbar" type="text" alt="Search Bar" placeholder="Search Movies..."></input>
                 </div>
                 <div>
-                    <input className="watched-toggle" type="image" src={watchedButton} alt="History" onClick={this.props.toggleWatched}></input>
+                    <input className="watched-toggle clickable" type="image" src={watchedButton} alt="History" onClick={this.props.toggleWatched}></input>
                 </div>
             </div>
         );
@@ -94,14 +96,26 @@ class CentrePanelControls extends React.Component {
         return (
             <div className="centre-panel-controls">
                 <div>
-                    <input className="dislike-button" type="image" src={dislikeButton} alt="Dislike" onClick={this.props.onDislike}></input>
+                    <input className="dislike-button clickable" type="image" src={dislikeButton} alt="Dislike" onClick={this.props.onDislike}></input>
                 </div>
                 <div>
-                    <input className="watch-button" type="image" src={watchButton} alt="Watch" onClick={this.props.onWatch}></input>
+                    <input className="watch-button clickable" type="image" src={watchButton} alt="Watch" onClick={this.props.onWatch}></input>
                 </div>
                 <div>
-                    <input className="like-button" type="image" src={likeButton} alt="Like" onClick={() => {this.props.onLike()}}></input>
+                    <input className="like-button clickable" type="image" src={likeButton} alt="Like" onClick={this.props.onLike}></input>
                 </div>
+            </div>
+        );
+    }
+}
+
+class TabBar extends React.Component {
+    render() {
+        return (
+            <div className="tab-bar">
+                <button className="tablinks" onClick={this.props.selectGenre("For You")}>For You</button>
+                <button className="tablinks" onClick={this.props.selectGenre("Trending")}>Trending</button>
+                <button className="tablinks" onClick={this.props.selectGenre("Comedy")}>Comedy</button>
             </div>
         );
     }
@@ -135,23 +149,15 @@ class Screen extends React.Component {
         this.toggleWatched = this.toggleWatched.bind(this);
 
         this.newMovie = this.newMovie.bind(this);
+        this.setCurrentMovie = this.setCurrentMovie.bind(this);
 
-        this.setLikeListWithHistory = this.setLikeListWithHistory.bind(this);
+        this.selectGenre = this.selectGenre.bind(this);
     }
 
     addLike(item) {
-        let newList = this.state.likedList.slice();
-        newList.push(item);
-        console.log(newList);
-        this.setState((currState) => {return ({
-            currentMovie: currState.currentMovie,
-            likedToggle: currState.likedToggle,
-            watchedToggle: currState.watchedToggle,
-            likedList: newList,
-            likedHistory: currState.likedHistory,
-            watchedList: currState.watchedList,
-            watchedHistory: currState.watchedHistory,
-        })}, () => console.log(this.state.likedList));
+        let newState = this.state.likedList.slice();
+        newState.push(item);
+        this.setLikeListWithHistory(newState);
     }
 
     removeLike(index) {
@@ -166,6 +172,7 @@ class Screen extends React.Component {
 
     setLikeListWithHistory(newList) {
         this.state.likedHistory.push(this.state.likedList);
+        this.state.likedList = newList;
         this.setState({
             currentMovie: this.state.currentMovie,
             likedToggle: this.state.likedToggle,
@@ -209,6 +216,7 @@ class Screen extends React.Component {
 
     setWatchedListWithHistory(newList) {
         this.state.watchedHistory.push(this.state.watchedList);
+        this.state.watchedList = newList;
         this.setState({
             currentMovie: this.state.currentMovie,
             likedToggle: this.state.likedToggle,
@@ -265,33 +273,44 @@ class Screen extends React.Component {
             nextMovie = movieInfo[Math.floor(Math.random() * movieInfo.length)];
         }
 
+        this.setCurrentMovie(nextMovie);
+    }
+
+    setCurrentMovie(movie) {
         this.setState({
-            currentMovie: nextMovie,
-            likedToggle: this.state.likedToggle,
-            watchedToggle: this.state.watchedToggle,
-            likedList: this.state.likedList,
-            likedHistory: this.state.likedHistory,
-            watchedList: this.state.watchedList,
-            watchedHistory: this.state.watchedHistory,
+            ...this.state,
+            currentMovie: movie,
         });
+
+        console.log("set");
     }
 
     onLike() {
-        this.addLike(this.state.currentMovie);
+        if(!this.state.likedList.includes(this.state.currentMovie)) {
+            this.addLike(this.state.currentMovie);
+        }
         this.newMovie();
     }
 
     onWatch() {
-        this.addWatch(this.state.currentMovie);
-        this.newMovie();
+        if(!this.state.watchedList.includes(this.state.currentMovie)) {
+            this.addWatch(this.state.currentMovie);
+        }
+    }
+
+    selectGenre(genre) {
+
     }
 
     render() {
-        let likedPanel = this.state.likedToggle ? <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike}/> : <div className="liked-sidepanel"><div className="sidepanel"/></div>;
-        let watchedPanel = this.state.watchedToggle ? <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} /> : <div className="watched-sidepanel"><div className="sidepanel"/></div>
+        let likedPanel = this.state.likedToggle ? <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike} setMovie={this.setCurrentMovie} /> : <div className="liked-sidepanel"><div className="sidepanel"/></div>;
+        let watchedPanel = this.state.watchedToggle ? <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} setMovie={this.setCurrentMovie} /> : <div className="watched-sidepanel"><div className="sidepanel"/></div>
 
         return (
             <div>
+                <div>
+                    <TabBar selectGenre={this.selectGenre}/>
+                </div>
                 <div className='content'>
                     {likedPanel}
                     <CentrePanel movie={this.state.currentMovie} onLike={this.onLike} onWatch={this.onWatch} onDislike={this.newMovie}/>

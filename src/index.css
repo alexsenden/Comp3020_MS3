@@ -1,8 +1,3 @@
-body {
-    font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
-}
-
 li {
     list-style-type: none;
 }
@@ -17,19 +12,27 @@ li {
 
 .icon-text {
     font: 20px "Century Gothic", Futura, sans-serif;
-    width: 136px;
+    padding-right: 10px;
 }
 
 .icon-block {
     display: -webkit-flex;
     display: flex;
     align-items: center;
+}
+
+.small-movie-info {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    /*background-color: aqua;*/
     width: 90%;
     height: 100px;
     border: 2px solid #e3e3e3;
     border-radius: 10px;
-    margin-top: 10px;
+    margin-bottom: 10px;
     margin-left: 5%;
+    margin-right: 5%;
 }
 
 .small-icon-collection {
@@ -51,13 +54,15 @@ li {
     height: 20px;
     width: 20px;
     margin-left: auto;
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 .sidepanel-label {
     font: 24px "Century Gothic", Futura, sans-serif;
     font-weight: bold;
-    margin-left: 16px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .sidepanel {
@@ -69,7 +74,7 @@ li {
     margin-left: auto;
     margin-right: auto;
     padding-bottom: 10px;
-    padding-top: 10px;
+    margin-top: 10px;
     width: 85%;
 }
 
@@ -185,4 +190,33 @@ li {
 .watch-button {
     width: 80px;
     height: 40px;
+}
+
+.tab-bar {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tablinks {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.tablinks:hover {
+    background-color: #ddd;
+}
+
+.clickable:hover {
+    filter: brightness(90%);
+    transition: 0.2s;
+}
+.clickable:active {
+    transition: 0.0s;
+    filter: brightness(75%);
 }
