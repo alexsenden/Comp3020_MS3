@@ -17,7 +17,7 @@ class SmallIcon extends React.Component {
     render() {
         return (
             <div className="icon-block">
-                <div className="small-movie-info clickable">
+                <div className="small-movie-info clickable" onClick={() => this.props.setMovie(this.props.movie)}>
                     <img className="icon" src={this.props.movie.coverRoute} alt={this.props.movie.title + " Cover"}/>
                     <div className="icon-text">{this.props.movie.title}</div>
                 </div>
@@ -29,7 +29,7 @@ class SmallIcon extends React.Component {
 
 class SmallIconCollection extends React.Component {
     render() {
-        let listItems = this.props.movieList.map((m, idx) => <li onClick={() => this.props.setMovie(m)} key={idx}><SmallIcon movie={m} removeItem={() => this.props.removeItem(idx)} /></li>);
+        let listItems = this.props.movieList.map((m, idx) => <li key={idx}><SmallIcon movie={m} setMovie={this.props.setMovie} removeItem={() => this.props.removeItem(idx)} /></li>);
         return (
             <div className="small-icon-collection">
                 {listItems}
@@ -111,7 +111,7 @@ class CentrePanelControls extends React.Component {
 
 class TabBar extends React.Component {
     render() {
-        let activeColour = "#ddd";
+        let activeColour = "#ccc";
 
         return (
             <div className="tab-bar">
