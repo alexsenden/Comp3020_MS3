@@ -29,7 +29,6 @@ li {
     display: -webkit-flex;
     display: flex;
     align-items: center;
-    /*background-color: aqua;*/
     width: 90%;
     height: 100px;
     border: 2px solid #e3e3e3;
@@ -40,7 +39,7 @@ li {
 }
 
 .small-icon-collection {
-    height: 75vh;
+    height: calc(92vh - 181px);
     overflow: scroll;
     overflow-x: hidden;
 }
@@ -134,7 +133,7 @@ li {
 
 .centre-panel {
     width: 40vw;
-    height: 75vh;
+    height: calc(92vh - 122px);
     overflow: scroll;
     overflow-x: hidden;
     padding-left: 15px;
@@ -227,4 +226,8 @@ li {
 .clickable:active {
     transition: 0.0s;
     filter: brightness(75%);
+}
+
+.page {
+    overflow: hidden;
 }

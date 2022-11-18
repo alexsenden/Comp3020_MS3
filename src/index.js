@@ -283,7 +283,7 @@ class Screen extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="page">
                 <div>
                     <TabBar selectGenre={this.selectGenre} currentGenre={this.state.currentGenre}/>
                 </div>
