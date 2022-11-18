@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
-import { movieInfo } from './MovieInfo';
+import { movieInfo, genre } from './MovieInfo';
 
 import xButtonIcon from './images/X.png';
 import undoButton from './images/undobutton.png';
@@ -41,7 +41,7 @@ class SmallIconCollection extends React.Component {
 class SidePanel extends React.Component {
     render() {
         return (
-            <div className="sidepanel">
+            <div className="sidepanel" style={{visibility: this.props.visibility}}>
                 <div className="sidepanel-label">{this.props.label}</div>
                 <SmallIconCollection movieList={this.props.movieList} removeItem={this.props.removeItem} setMovie={this.props.setMovie}/>
                 <div className="sidepanel-control-buttons">
@@ -111,11 +111,16 @@ class CentrePanelControls extends React.Component {
 
 class TabBar extends React.Component {
     render() {
+        let activeColour = "#ddd";
+
         return (
             <div className="tab-bar">
-                <button className="tablinks" onClick={this.props.selectGenre("For You")}>For You</button>
-                <button className="tablinks" onClick={this.props.selectGenre("Trending")}>Trending</button>
-                <button className="tablinks" onClick={this.props.selectGenre("Comedy")}>Comedy</button>
+                <button className="tablinks" style={this.props.currentGenre === genre.forYou ? {backgroundColor: activeColour} : {}} onClick={() => this.props.selectGenre(genre.forYou)}>For You</button>
+                <button className="tablinks" style={this.props.currentGenre === genre.trending ? {backgroundColor: activeColour} : {}} onClick={() => this.props.selectGenre(genre.trending)}>Trending</button>
+                <button className="tablinks" style={this.props.currentGenre === genre.comedy ? {backgroundColor: activeColour} : {}} onClick={() => this.props.selectGenre(genre.comedy)}>Comedy</button>
+                <button className="tablinks" style={this.props.currentGenre === genre.action ? {backgroundColor: activeColour} : {}} onClick={() => this.props.selectGenre(genre.action)}>Action</button>
+                <button className="tablinks" style={this.props.currentGenre === genre.adventure ? {backgroundColor: activeColour} : {}} onClick={() => this.props.selectGenre(genre.adventure)}>Adventure</button>
+                <button className="tablinks" style={this.props.currentGenre === genre.romance ? {backgroundColor: activeColour} : {}} onClick={() => this.props.selectGenre(genre.romance)}>Romance</button>
             </div>
         );
     }
@@ -133,6 +138,7 @@ class Screen extends React.Component {
             likedHistory: [],
             watchedList: [],
             watchedHistory: [],
+            currentGenre: genre.forYou,
         };
 
         this.onLike = this.onLike.bind(this);
@@ -239,7 +245,7 @@ class Screen extends React.Component {
     newMovie() {
         let nextMovie = this.state.currentMovie;
 
-        while(nextMovie == this.state.currentMovie) {
+        while(nextMovie === this.state.currentMovie || (this.state.currentGenre > 0 && !nextMovie.genres.includes(this.state.currentGenre))) {
             nextMovie = movieInfo[Math.floor(Math.random() * movieInfo.length)];
         }
 
@@ -251,8 +257,6 @@ class Screen extends React.Component {
             ...this.state,
             currentMovie: movie,
         });
-
-        console.log("set");
     }
 
     onLike() {
@@ -269,22 +273,24 @@ class Screen extends React.Component {
     }
 
     selectGenre(genre) {
-
+        if(this.state.currentGenre !== genre) {
+            this.setState({
+                ...this.state,
+                currentGenre: genre,
+            }, () => this.newMovie());
+        }
     }
 
     render() {
-        let likedPanel = this.state.likedToggle ? <SidePanel className="liked-sidepanel" label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike} setMovie={this.setCurrentMovie} /> : <div className="liked-sidepanel"><div className="sidepanel"/></div>;
-        let watchedPanel = this.state.watchedToggle ? <SidePanel className="watched-sidepanel" label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} setMovie={this.setCurrentMovie} /> : <div className="watched-sidepanel"><div className="sidepanel"/></div>
-
         return (
             <div>
                 <div>
-                    <TabBar selectGenre={this.selectGenre}/>
+                    <TabBar selectGenre={this.selectGenre} currentGenre={this.state.currentGenre}/>
                 </div>
                 <div className='content'>
-                    {likedPanel}
+                    <SidePanel className="liked-sidepanel" visibility={this.state.likedToggle ? "visible" : "hidden"} label="Liked Movies" movieList={this.state.likedList} removeItem={this.removeLike} clearList={this.clearLike} undoList={this.undoLike} setMovie={this.setCurrentMovie} />
                     <CentrePanel movie={this.state.currentMovie} onLike={this.onLike} onWatch={this.onWatch} onDislike={this.newMovie}/>
-                    {watchedPanel}
+                    <SidePanel className="watched-sidepanel" visibility={this.state.watchedToggle ? "visible" : "hidden"} label="Watched Movies" movieList={this.state.watchedList} removeItem={this.removeWatch} clearList={this.clearWatch} undoList={this.undoWatch} setMovie={this.setCurrentMovie} />
                 </div>
                 <div>
                     <BottomBar toggleLiked={this.toggleLiked} toggleWatched={this.toggleWatched}/>

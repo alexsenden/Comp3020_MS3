@@ -197,14 +197,18 @@ li {
 }
 
 .tab-bar {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
 }
 
 .tablinks {
-    background-color: inherit;
-    float: left;
+    flex-grow: 100;
+    background-color: #f1f1f1;
     border: none;
     outline: none;
     cursor: pointer;
