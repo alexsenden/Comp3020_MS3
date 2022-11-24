@@ -78,7 +78,7 @@ class SidePanel extends React.Component {
         {/* panel buttons */}
         <div className="panel-buttons d-flex justify-content-between">
           {/* clear button */}
-          <div className="">
+          <div className="sidepanel-clear">
             <Button
               className=""
               variant="outline-danger"
@@ -88,7 +88,7 @@ class SidePanel extends React.Component {
             </Button>
           </div>
           {/* undo button */}
-          <div className="">
+          <div className="sidepanel-undo">
             <Button
               className=""
               variant="outline-light"
@@ -98,7 +98,6 @@ class SidePanel extends React.Component {
             </Button>
           </div>
         </div>
-        {/* <div className="sidepanel-control-buttons"></div> */}
       </div>
     );
   }
@@ -145,10 +144,22 @@ class BottomBar extends React.Component {
 
 class CentrePanel extends React.Component {
   render() {
+    let controlsOffset = this.props.watchedToggle ?
+      (this.props.likedToggle ? `23%` : `28%`)
+      : `5%`;
+
+    let playButtonOffset = `50%`;
+    if(this.props.watchedToggle && !this.props.likedToggle) {
+      playButtonOffset = `38.5%`;
+    }
+    else if(!this.props.watchedToggle && this.props.likedToggle) {
+      playButtonOffset = `61.5%`
+    }
+
     return (
       <div className="centre-panel">
         <div className="trailer">
-          <video key={this.props.movie.title} autoPlay loop controls>
+          <video key={this.props.movie.title} autoPlay loop>
             <source src={this.props.movie.trailer}></source>
           </video>
         </div>
@@ -162,21 +173,24 @@ class CentrePanel extends React.Component {
                 alt="Rating"
               />
             </div>
-            <div>
-              <Button variant="light" onClick={this.props.onWatch}>
-                <BsPlayCircle size="2rem" color="black" />
-                <span className="watch-button">PlayNow</span>
-              </Button>
-            </div>
           </div>
           <div className="description">
             <p>{this.props.movie.description}</p>
           </div>
         </div>
-        <div className="center-div bottom-fix overlay-component transparent-item">
+        <div 
+          className="play-button overlay-component transparent-item"
+          style={{left: playButtonOffset}}
+        >
+          <BsPlayCircle 
+            size="5rem" 
+            color="white" 
+            onClick={() => this.props.onWatch(this.props.movie)}
+          />
+        </div>
+        <div className="center-div bottom-fix overlay-component transparent-item" style={{right: controlsOffset}}>
           <CentrePanelControls
             onLike={this.props.onLike}
-            //   onWatch={this.props.onWatch}
             onDislike={this.props.onDislike}
           />
         </div>
@@ -192,25 +206,25 @@ class CentrePanelControls extends React.Component {
         <div>
           <Button
             className="btn-large"
-            variant="danger"
-            size="lg"
-            block
-            onClick={this.props.onDislike}
-          >
-            <AiOutlineClose />
-          </Button>
-        </div>
-        <div></div>
-        <div className="vertical-line"></div>
-        <div>
-          <Button
-            className="btn-large"
             variant="success"
             size="lg"
             block
             onClick={this.props.onLike}
           >
             <BsHeart />
+          </Button>
+        </div>
+        <div></div>
+        <div className="horizontal-line"></div>
+        <div>
+          <Button
+            className="btn-large"
+            variant="danger"
+            size="lg"
+            block
+            onClick={this.props.onDislike}
+          >
+            <AiOutlineClose />
           </Button>
         </div>
       </div>
@@ -487,6 +501,8 @@ class Screen extends React.Component {
             onLike={this.onLike}
             onWatch={this.onWatch}
             onDislike={this.newMovie}
+            likedToggle={this.state.likedToggle}
+            watchedToggle={this.state.watchedToggle}
           />
 
           <SidePanel
