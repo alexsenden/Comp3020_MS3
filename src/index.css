@@ -24,7 +24,7 @@ li {
 .icon {
   padding-left: 10px;
   padding-right: 10px;
-  width: 54px;
+  width: 74px;
   height: 80px;
   float: left;
 }
@@ -57,9 +57,13 @@ li {
 }
 
 .small-icon-collection {
-  height: 85%;
   overflow: scroll;
   overflow-x: hidden;
+  position: absolute;
+  bottom: 60px;
+  top: 75px;
+  right: 10%;
+  left: 5%;
 }
 .small-icon-collection::-webkit-scrollbar {
   width: 2px;
@@ -93,33 +97,22 @@ li {
   padding: 20px;
   border: 0.5px solid var(--tertiary-color);
   height: 100%;
-  /* width: 22vw; */
   transition: all 0.3s ease-out;
 }
 .hide-sidepanel {
   display: none;
 }
 
-.sidepanel-control-buttons {
+.sidepanel-clear {
+  position: absolute;
+  bottom: 10px;
+  left: 10%;
 }
 
 .sidepanel-undo {
-}
-
-.sidepanel-clear {
-}
-
-/* not functional */
-.watched-sidepanel {
-  /* margin-left: auto; */
-  height: 100%;
-  border-left: 1px solid var(--primary-color);
-  transition: all 1s linear;
-}
-
-/* not functional */
-.liked-sidepanel {
-  margin-right: auto;
+  position: absolute;
+  bottom: 10px;
+  right: 10%;
 }
 
 .content {
@@ -127,8 +120,10 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80%;
   width: 100%;
+  position: absolute;
+  top: 50px;
+  bottom: 90px;
 }
 
 .bottom-bar {
@@ -137,7 +132,6 @@ li {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: fit-content;
   align-items: center;
   justify-content: space-between;
 }
@@ -147,7 +141,7 @@ li {
   display: inline-block;
   width: 50px;
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   margin-left: 8vw;
 }
 .liked-toggle .badge {
@@ -161,9 +155,11 @@ li {
 }
 
 .watched-toggle {
+  position: relative;
+  display: inline-block;
   width: 50px;
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   margin-right: 8vw;
 }
 
@@ -180,7 +176,6 @@ li {
   height: 100%;
   margin: 0px 0px 0px 0px;
   color: var(--text-color);
-  /* height: calc(92vh - 122px); */
   overflow: scroll;
   overflow-x: hidden;
   box-shadow: -2px 7px 35px -12px var(--shadows);
@@ -202,12 +197,12 @@ li {
 }
 .bottom-fix {
   position: absolute;
-  left: 35%;
-  bottom: 15%;
+  right: 23%;
+  bottom: 5%;
 }
 .transparent-item {
   opacity: 0.7;
-  transition: all 0.3s ease-in;
+  transition: all 0.3s;
 }
 .transparent-item:hover {
   opacity: 1;
@@ -226,6 +221,8 @@ li {
   width: 100%;
   height: 100%;
   animation: fadeIn 5s;
+  overflow: hidden;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
 @keyframes fadeIn {
   0% {
@@ -248,7 +245,7 @@ video::-webkit-media-controls-panel {
 .movie-info {
   position: absolute;
   overflow: scroll;
-  top: 30%;
+  bottom: 5%;
   max-height: 50%;
   width: 40%;
 }
@@ -262,13 +259,14 @@ video::-webkit-media-controls-panel {
 }
 
 .rating {
-  height: 14px;
-  width: 75.6px;
+  height: 28px;
+  width: 151px;
   margin-left: 20px;
+  margin-top: 10px;
 }
 
 .description {
-  margin: 40px 20px;
+  margin: 10px 20px;
   font-size: large;
   font-weight: bold;
   color: aliceblue;
@@ -278,6 +276,7 @@ video::-webkit-media-controls-panel {
 .centre-panel-controls {
   display: -webkit-flex;
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin: 10px 10px;
 }
@@ -301,6 +300,7 @@ video::-webkit-media-controls-panel {
 }
 
 .tab-bar {
+  height: 30%;
   display: -webkit-flex;
   display: flex;
   align-items: center;
@@ -314,7 +314,6 @@ video::-webkit-media-controls-panel {
 
 .tablinks {
   flex-grow: 100;
-
   background-color: var(--background-color);
   color: var(--primary-color);
   border: none;
@@ -330,12 +329,12 @@ video::-webkit-media-controls-panel {
 }
 
 .clickable:hover {
-  filter: brightness(90%);
+  filter: brightness(75%);
   transition: 0.2s;
 }
 .clickable:active {
   transition: 0s;
-  filter: brightness(75%);
+  filter: brightness(60%);
 }
 .circle-button {
   border-radius: 100%;
@@ -344,15 +343,30 @@ video::-webkit-media-controls-panel {
   font-size: 40px;
   width: 200px;
 }
-.vertical-line {
+.horizontal-line {
   display: inline-block;
-  border-left: 1px solid var(--tertiary-color);
-  margin: 0 10px;
-  height: 40px;
+  border-bottom: 1px solid var(--tertiary-color);
+  margin: 10px 0px;
+  width: 150px;
 }
 .page {
   overflow: hidden;
   background: var(--background-color);
   height: 100vh;
   width: 100%;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+  transition: all 0.2s ease-in;
+}
+.play-button:hover {
+  opacity: 1;
+}
+.play-button:active {
+  transition: 0s;
+  filter: brightness(60%);
 }
