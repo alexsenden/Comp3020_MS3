@@ -114,7 +114,12 @@ class BottomBar extends React.Component {
               onClick={this.props.toggleLiked}
               variant={this.props.likedToggle ? "warning" : "outline-warning"}
             >
-              <span class="badge">0</span>
+              {/* the likeb badge is updated to a maximum of 9 */}
+              {this.props.numberOfLikes < 10 ? (
+                <span className="badge"> {this.props.numberOfLikes}</span>
+              ) : (
+                <span className="badge"> 9+</span>
+              )}
               <BsBookmarkHeartFill size="2rem" color="white" /> Likes
             </Button>
           </div>
@@ -157,16 +162,17 @@ class CentrePanel extends React.Component {
   }
 
   render() {
-    let controlsOffset = this.props.watchedToggle ?
-      (this.props.likedToggle ? `23%` : `28%`)
+    let controlsOffset = this.props.watchedToggle
+      ? this.props.likedToggle
+        ? `23%`
+        : `28%`
       : `5%`;
 
     let playButtonOffset = `50%`;
-    if(this.props.watchedToggle && !this.props.likedToggle) {
+    if (this.props.watchedToggle && !this.props.likedToggle) {
       playButtonOffset = `38.5%`;
-    }
-    else if(!this.props.watchedToggle && this.props.likedToggle) {
-      playButtonOffset = `61.5%`
+    } else if (!this.props.watchedToggle && this.props.likedToggle) {
+      playButtonOffset = `61.5%`;
     }
 
     return (
@@ -191,20 +197,23 @@ class CentrePanel extends React.Component {
             <p>{this.props.movie.description}</p>
           </div>
         </div>
-        <div 
+        <div
           className="play-button overlay-component transparent-item"
-          style={{left: playButtonOffset}}
+          style={{ left: playButtonOffset }}
         >
-          <BsPlayCircle 
-            size="5rem" 
-            color="white" 
+          <BsPlayCircle
+            size="5rem"
+            color="white"
             onClick={() => {
               this.props.onWatch(this.props.movie);
               this.toggleFullScreen();
             }}
           />
         </div>
-        <div className="center-div bottom-fix overlay-component transparent-item" style={{right: controlsOffset}}>
+        <div
+          className="center-div bottom-fix overlay-component transparent-item"
+          style={{ right: controlsOffset }}
+        >
           <CentrePanelControls
             onLike={this.props.onLike}
             onDislike={this.props.onDislike}
@@ -339,6 +348,7 @@ class Screen extends React.Component {
       watchedList: [],
       watchedHistory: [],
       currentGenre: genre.forYou,
+      numberOfLikes: 0,
     };
 
     this.onLike = this.onLike.bind(this);
@@ -358,18 +368,32 @@ class Screen extends React.Component {
     this.setCurrentMovie = this.setCurrentMovie.bind(this);
 
     this.selectGenre = this.selectGenre.bind(this);
+
+    this.increaseNumLikes = this.increaseNumLikes.bind(this);
   }
 
   addLike(item) {
     let newState = this.state.likedList.slice();
     newState.push(item);
     this.setLikeListWithHistory(newState);
+    this.increaseNumLikes();
   }
 
   removeLike(index) {
     let newState = this.state.likedList.slice();
     newState.splice(index, 1);
     this.setLikeListWithHistory(newState);
+  }
+
+  increaseNumLikes() {
+    let newLikes = this.state.numberOfLikes + 1;
+    this.state.numberOfLikes = newLikes;
+
+    this.setState({
+      ...this.state,
+      numberOfLikes: newLikes,
+    });
+    console.log(this.state);
   }
 
   clearLike() {
@@ -539,6 +563,7 @@ class Screen extends React.Component {
           <BottomBar
             toggleLiked={this.toggleLiked}
             likedToggle={this.state.likedToggle}
+            numberOfLikes={this.state.numberOfLikes}
             toggleWatched={this.toggleWatched}
             watchedToggle={this.state.watchedToggle}
           />
