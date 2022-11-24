@@ -143,6 +143,42 @@ class BottomBar extends React.Component {
 }
 
 class CentrePanel extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      fullscreen: false
+    }
+
+    window.addEventListener('fullscreenchange', (event) => { });
+  }
+
+  toggleFullScreen() {
+    var el = document.getElementById("trailer");
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if (el.msRequestFullscreen) {
+      el.msRequestFullscreen();
+    } else if (el.mozRequestFullScreen) {
+      el.mozRequestFullScreen();
+    } else if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+    }
+  }
+
+  onfullscreenchange() {
+    let el = document.getElementById("trailer");
+
+    if(this.state.fullscreen) {
+      el.removeAttribute("controls");
+    }
+    else {
+      el.setAttribute("controls","controls")   
+    }
+
+    this.setState({fullscreen: !this.state.fullscreen})
+  }
+
   render() {
     let controlsOffset = this.props.watchedToggle ?
       (this.props.likedToggle ? `23%` : `28%`)
@@ -159,7 +195,7 @@ class CentrePanel extends React.Component {
     return (
       <div className="centre-panel">
         <div className="trailer">
-          <video key={this.props.movie.title} autoPlay loop>
+          <video id="trailer" key={this.props.movie.title} autoPlay loop>
             <source src={this.props.movie.trailer}></source>
           </video>
         </div>
@@ -185,7 +221,10 @@ class CentrePanel extends React.Component {
           <BsPlayCircle 
             size="5rem" 
             color="white" 
-            onClick={() => this.props.onWatch(this.props.movie)}
+            onClick={() => {
+              this.props.onWatch(this.props.movie);
+              this.toggleFullScreen();
+            }}
           />
         </div>
         <div className="center-div bottom-fix overlay-component transparent-item" style={{right: controlsOffset}}>
