@@ -176,7 +176,7 @@ li {
   height: 100%;
   margin: 0px 0px 0px 0px;
   color: var(--text-color);
-  overflow: scroll;
+  /*overflow: scroll;*/
   overflow-x: hidden;
   box-shadow: -2px 7px 35px -12px var(--shadows);
   border-radius: 10px;
@@ -369,4 +369,31 @@ video::-webkit-media-controls-panel {
 .play-button:active {
   transition: 0s;
   filter: brightness(60%);
+}
+
+.small-rating {
+  height: 14px;
+  width: 75px;
+}
+
+.search-result-collection {
+  overflow: scroll;
+  overflow-x: hidden;
+  height: calc(100% - 60px);
+  margin-right: 5%;
+}
+.search-result-collection::-webkit-scrollbar {
+  width: 2px;
+  background: transparent;
+}
+.search-result-collection::-webkit-scrollbar-thumb {
+  background: #e3e3e3;
+}
+
+.search-result-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bolder;
 }

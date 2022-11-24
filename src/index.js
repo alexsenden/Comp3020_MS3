@@ -114,13 +114,14 @@ class BottomBar extends React.Component {
               onClick={this.props.toggleLiked}
               variant={this.props.likedToggle ? "warning" : "outline-warning"}
             >
-              <span class="badge">0</span>
+              <span class="badge">{this.props.numLikes}</span>
               <BsBookmarkHeartFill size="2rem" color="white" /> Likes
             </Button>
           </div>
         </div>
         <div>
           <input
+            id="search"
             className="searchbar"
             type="text"
             alt="Search Bar"
@@ -326,6 +327,77 @@ class TabBar extends React.Component {
   }
 }
 
+class SearchPanel extends React.Component {
+  render() {
+    let searchTerm = "a";
+    return(
+      <div className="centre-panel">
+        <p className="search-result-title">Showing Results for "{searchTerm}"</p>
+        <SearchResultList searchTerm={searchTerm} />
+      </div>
+    );
+  }
+}
+
+class SearchResultList extends React.Component {
+  getMoviesFromSearchTerm(searchTerm) {
+    let term = searchTerm.toLowerCase();
+    let movieList = [];
+    
+    movieInfo.forEach((m) => {
+      if(m.title.indexOf(searchTerm) != -1) {
+        movieList.push(m);
+      }
+    });
+
+    movieList.sort((a, b) => a.title.toLowerCase().indexOf(searchTerm) - b.title.toLowerCase().indexOf(searchTerm))
+
+    return movieList;
+  }
+
+  render() {
+    let movieList = this.getMoviesFromSearchTerm(this.props.searchTerm);
+
+    let listItems = movieList.map((m, idx) => (
+      <li key={idx}>
+        <SearchResult
+          movie={m}
+          setMovie={this.props.setMovie}
+          removeItem={() => this.props.removeItem(idx)}
+        />
+      </li>
+    ));
+
+    return <div className="search-result-collection">{listItems}</div>;
+  }
+}
+
+class SearchResult extends React.Component {
+  render() {
+    return (
+      <div className="icon-block">
+        <div
+          className="small-movie-info clickable"
+        >
+          <img
+            className="icon"
+            src={this.props.movie.coverRoute}
+            alt={this.props.movie.title + " Cover"}
+          />
+          <div>
+            <div className="icon-text">{this.props.movie.title}</div>
+            <img
+                className="small-rating"
+                src={this.props.movie.rating}
+                alt="Rating"
+              />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 class Screen extends React.Component {
   constructor(props) {
     super(props);
@@ -489,6 +561,21 @@ class Screen extends React.Component {
   }
 
   render() {
+    let trailerPanel = <CentrePanel
+      movie={this.state.currentMovie}
+      onLike={this.onLike}
+      onWatch={this.onWatch}
+      onDislike={this.newMovie}
+      likedToggle={this.state.likedToggle}
+      watchedToggle={this.state.watchedToggle}
+    />
+
+    let searchPanel = <SearchPanel />
+
+    let centreContent = (document.activeElement.id === "search" || true) ? searchPanel : trailerPanel;
+
+    console.log(document.activeElement.id);
+
     return (
       <div className="page">
         <div>
@@ -506,20 +593,14 @@ class Screen extends React.Component {
                 : { width: "0%", scale: "scaleX(0)" }
             }
             label="Liked Movies"
-            movieList={this.state.likedList}
+            movieList={this.state.likedList}f
             removeItem={this.removeLike}
             clearList={this.clearLike}
             undoList={this.undoLike}
             setMovie={this.setCurrentMovie}
           />
-          <CentrePanel
-            movie={this.state.currentMovie}
-            onLike={this.onLike}
-            onWatch={this.onWatch}
-            onDislike={this.newMovie}
-            likedToggle={this.state.likedToggle}
-            watchedToggle={this.state.watchedToggle}
-          />
+          
+          {centreContent}
 
           <SidePanel
             visibility={
@@ -541,6 +622,7 @@ class Screen extends React.Component {
             likedToggle={this.state.likedToggle}
             toggleWatched={this.toggleWatched}
             watchedToggle={this.state.watchedToggle}
+            numLikes={this.state.likedList.length}
           />
         </div>
       </div>
