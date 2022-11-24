@@ -143,16 +143,6 @@ class BottomBar extends React.Component {
 }
 
 class CentrePanel extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      fullscreen: false
-    }
-
-    window.addEventListener('fullscreenchange', (event) => { });
-  }
-
   toggleFullScreen() {
     var el = document.getElementById("trailer");
     if (el.requestFullscreen) {
@@ -164,19 +154,6 @@ class CentrePanel extends React.Component {
     } else if (el.webkitRequestFullscreen) {
       el.webkitRequestFullscreen();
     }
-  }
-
-  onfullscreenchange() {
-    let el = document.getElementById("trailer");
-
-    if(this.state.fullscreen) {
-      el.removeAttribute("controls");
-    }
-    else {
-      el.setAttribute("controls","controls")   
-    }
-
-    this.setState({fullscreen: !this.state.fullscreen})
   }
 
   render() {
