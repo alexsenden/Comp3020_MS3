@@ -233,6 +233,15 @@ class CentrePanel extends React.Component {
       playButtonOffset = `61.5%`;
     }
 
+    let gradientRight = this.props.watchedToggle ? `25.805%` : `40px`;
+    let gradientLeft = this.props.likedToggle ? `25.805%` : `40px`;
+
+    if (this.props.watchedToggle && this.props.likedToggle) {
+      let centralGradient = `calc(20.625% + 10px)`;
+      gradientLeft = centralGradient;
+      gradientRight = centralGradient;
+    }
+
     return (
       <div className="centre-panel">
         <div className="trailer">
@@ -255,13 +264,15 @@ class CentrePanel extends React.Component {
             <p>{this.props.movie.description}</p>
           </div>
         </div>
-        {/*
-        <img
-          className="gradient-overlay"
-          src={gradient}
-          alt={"gradient"}
-        />
-        */}
+        <div
+          className="gradient-wrapper"
+          style={{
+            right: gradientRight,
+            left: gradientLeft,
+          }}
+        >
+          <img className="gradient-image" src={gradient} alt={"gradient"} />
+        </div>
         <div
           className="play-button overlay-component transparent-item"
           style={{ left: playButtonOffset }}
