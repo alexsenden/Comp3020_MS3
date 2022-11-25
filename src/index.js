@@ -369,14 +369,14 @@ class Screen extends React.Component {
 
     this.selectGenre = this.selectGenre.bind(this);
 
-    this.increaseNumLikes = this.increaseNumLikes.bind(this);
+    // this.increaseNumLikes = this.increaseNumLikes.bind(this);
   }
 
   addLike(item) {
     let newState = this.state.likedList.slice();
     newState.push(item);
     this.setLikeListWithHistory(newState);
-    this.increaseNumLikes();
+    // this.increaseNumLikes();
   }
 
   removeLike(index) {
@@ -385,16 +385,14 @@ class Screen extends React.Component {
     this.setLikeListWithHistory(newState);
   }
 
-  increaseNumLikes() {
-    let newLikes = this.state.numberOfLikes + 1;
-    this.state.numberOfLikes = newLikes;
-
-    this.setState({
-      ...this.state,
-      numberOfLikes: newLikes,
-    });
-    console.log(this.state);
-  }
+  // increaseNumLikes() {
+  //   let newLikes = this.state.numberOfLikes + 1;
+  //   this.state.numberOfLikes = newLikes;
+  // }
+  // decreaseNumLikes() {
+  //   let newLikes = this.state.numberOfLikes - 1;
+  //   this.state.numberOfLikes = newLikes;
+  // }
 
   clearLike() {
     this.setLikeListWithHistory([]);
@@ -403,6 +401,7 @@ class Screen extends React.Component {
   setLikeListWithHistory(newList) {
     this.state.likedHistory.push(this.state.likedList);
     this.state.likedList = newList;
+    this.state.numberOfLikes = newList.length;
     this.setState({
       ...this.state,
       likedList: newList,
@@ -415,6 +414,7 @@ class Screen extends React.Component {
     this.setState({
       ...this.state,
       likedList: this.state.likedHistory.pop(),
+      numberOfLikes: this.state.likedHistory.length,
     });
   }
 
