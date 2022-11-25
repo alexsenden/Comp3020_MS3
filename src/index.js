@@ -9,7 +9,15 @@ import {
   BsClockHistory,
   BsPlayCircle,
 } from "react-icons/bs";
-import { AiOutlineClose, AiOutlineUndo, AiOutlineSearch, AiOutlineEye, AiOutlineInfoCircle } from "react-icons/ai";
+
+import {
+  AiOutlineClose,
+  AiOutlineUndo,
+  AiOutlineSearch,
+  AiOutlineEye,
+  AiOutlineInfoCircle,
+} from "react-icons/ai";
+
 import "./index.css";
 
 import { movieInfo, genre } from "./MovieInfo";
@@ -104,7 +112,7 @@ class SidePanel extends React.Component {
 }
 
 class BottomBar extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.onSearch = this.onSearch.bind(this);
@@ -121,7 +129,19 @@ class BottomBar extends React.Component {
   }
 
   render() {
-    let searchButton = this.props.searchActive ? <button class="btn btn-danger" type="button" onClick={() => this.clearSearch()}><AiOutlineClose /></button> : <span class="input-group-text"><AiOutlineSearch /></span>
+    let searchButton = this.props.searchActive ? (
+      <button
+        class="btn btn-danger"
+        type="button"
+        onClick={() => this.clearSearch()}
+      >
+        <AiOutlineClose />
+      </button>
+    ) : (
+      <span className="input-group-text">
+        <AiOutlineSearch />
+      </span>
+    );
 
     return (
       <div className="bottom-bar">
@@ -142,8 +162,17 @@ class BottomBar extends React.Component {
             </Button>
           </div>
         </div>
-        <div class="input-group searchbar">
-          <input id="searchbar" ref="searchbar" type="text" class="form-control" placeholder="Search Movies..." aria-label="Search Movies..." aria-describedby="button-addon2" onChange={this.onSearch}/>
+        <div className="input-group searchbar">
+          <input
+            id="searchbar"
+            ref="searchbar"
+            type="text"
+            className="form-control"
+            placeholder="Search Movies..."
+            aria-label="Search Movies..."
+            aria-describedby="button-addon2"
+            onChange={this.onSearch}
+          />
           {searchButton}
         </div>
         <div>
@@ -247,7 +276,6 @@ class CentrePanelControls extends React.Component {
             className="btn-large"
             variant="success"
             size="lg"
-            block
             onClick={this.props.onLike}
           >
             <BsHeart />
@@ -260,7 +288,6 @@ class CentrePanelControls extends React.Component {
             className="btn-large"
             variant="danger"
             size="lg"
-            block
             onClick={this.props.onDislike}
           >
             <AiOutlineClose />
@@ -351,10 +378,16 @@ class TabBar extends React.Component {
 
 class SearchPanel extends React.Component {
   render() {
-    return(
+    return (
       <div className="centre-panel">
-        <p className="search-result-title">Showing Results for "{this.props.searchTerm}"</p>
-        <SearchResultList searchTerm={this.props.searchTerm} setCurrentMovie={this.props.setCurrentMovie} setSearchTerm={this.props.setSearchTerm}/>
+        <p className="search-result-title">
+          Showing Results for "{this.props.searchTerm}"
+        </p>
+        <SearchResultList
+          searchTerm={this.props.searchTerm}
+          setCurrentMovie={this.props.setCurrentMovie}
+          setSearchTerm={this.props.setSearchTerm}
+        />
       </div>
     );
   }
@@ -364,14 +397,18 @@ class SearchResultList extends React.Component {
   getMoviesFromSearchTerm(searchTerm) {
     let term = searchTerm.toLowerCase();
     let movieList = [];
-    
+
     movieInfo.forEach((m) => {
-      if(m.title.toLowerCase().indexOf(term) != -1) {
+      if (m.title.toLowerCase().indexOf(term) != -1) {
         movieList.push(m);
       }
     });
 
-    movieList.sort((a, b) => a.title.toLowerCase().indexOf(term) - b.title.toLowerCase().indexOf(term))
+    movieList.sort(
+      (a, b) =>
+        a.title.toLowerCase().indexOf(term) -
+        b.title.toLowerCase().indexOf(term)
+    );
 
     return movieList;
   }
@@ -399,7 +436,14 @@ class SearchResult extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      fullscreenActive: false,
+    }
+
     this.viewInformation = this.viewInformation.bind(this);
+    this.watchNow = this.watchNow.bind(this);
+    this.toggleFullScreen = this.toggleFullScreen.bind(this);
+    this.closeHiddenVideo = this.closeHiddenVideo.bind(this);
   }
 
   viewInformation() {
@@ -408,12 +452,41 @@ class SearchResult extends React.Component {
     this.props.setSearchTerm("");
   }
 
+  watchNow() {
+    this.setState({
+      ...this.state,
+      fullscreenActive: true,
+    }, 
+    () => {
+      this.toggleFullScreen();
+    }
+    );
+  }
+
+  toggleFullScreen() {
+    var el = document.getElementById("hidden-video-" + this.props.movie.title);
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if (el.msRequestFullscreen) {
+      el.msRequestFullscreen();
+    } else if (el.mozRequestFullScreen) {
+      el.mozRequestFullScreen();
+    } else if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+    }
+  }
+
+  closeHiddenVideo() {
+    this.setState({
+      ...this.state,
+      fullscreenActive: false,
+    });
+  }
+
   render() {
     return (
       <div className="icon-block">
-        <div
-          className="search-result"
-        >
+        <div className="search-result">
           <img
             className="icon"
             src={this.props.movie.coverRoute}
@@ -422,30 +495,67 @@ class SearchResult extends React.Component {
           <div>
             <div className="icon-text">{this.props.movie.title}</div>
             <img
-                className="small-rating"
-                src={this.props.movie.rating}
-                alt="Rating"
-              />
+              className="small-rating"
+              src={this.props.movie.rating}
+              alt="Rating"
+            />
           </div>
           <div className="search-result-button-collection">
-            <button 
+            <button
               type="button"
               class="btn btn-sm btn-outline-light search-result-button"
               onClick={() => this.viewInformation()}
               block
-              >
-                <AiOutlineInfoCircle /> View Information
+            >
+              <AiOutlineInfoCircle /> View Information
             </button>
-            <button 
+            <button
               type="button"
               class="btn btn-sm btn-outline-light search-result-button"
-              block
-              >
-                <AiOutlineEye /> Watch Now 
+              onClick={() => this.watchNow()}
+              blocks
+            >
+              <AiOutlineEye /> Watch Now
             </button>
           </div>
         </div>
+        { this.state.fullscreenActive 
+          ? <HiddenVideo movie={this.props.movie} closeHiddenVideo={this.closeHiddenVideo} />
+          : <div/>
+        }
       </div>
+    );
+  }
+}
+
+class HiddenVideo extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      fullscreen: false,
+    }
+  }
+
+  componentDidMount() {
+    document.getElementById("hidden-video-" + this.props.movie.title).addEventListener('fullscreenchange', () => {
+      if(!this.state.fullscreen) {
+        this.setState({
+          ...this.state,
+          fullscreen: true,
+        })
+      }
+      else {
+        this.props.closeHiddenVideo();
+      }
+    });
+  }
+
+  render() {
+    return (
+      <video id={"hidden-video-" + this.props.movie.title} className="hidden-video" key={this.props.movie.title} controls autoPlay>
+        <source src={this.props.movie.trailer}></source>
+      </video> 
     );
   }
 }
@@ -475,14 +585,14 @@ class Screen extends React.Component {
     this.removeWatch = this.removeWatch.bind(this);
     this.clearWatch = this.clearWatch.bind(this);
     this.undoWatch = this.undoWatch.bind(this);
-    
+
     this.toggleLiked = this.toggleLiked.bind(this);
     this.toggleWatched = this.toggleWatched.bind(this);
-    
+
     this.newMovie = this.newMovie.bind(this);
     this.setCurrentMovie = this.setCurrentMovie.bind(this);
     this.forceCurrentMovie = this.forceCurrentMovie.bind(this);
-    
+
     this.selectGenre = this.selectGenre.bind(this);
     this.setSearchTerm = this.setSearchTerm.bind(this);
   }
@@ -491,7 +601,6 @@ class Screen extends React.Component {
     let newState = this.state.likedList.slice();
     newState.push(item);
     this.setLikeListWithHistory(newState);
-    // this.increaseNumLikes();
   }
 
   removeLike(index) {
@@ -499,15 +608,6 @@ class Screen extends React.Component {
     newState.splice(index, 1);
     this.setLikeListWithHistory(newState);
   }
-
-  // increaseNumLikes() {
-  //   let newLikes = this.state.numberOfLikes + 1;
-  //   this.state.numberOfLikes = newLikes;
-  // }
-  // decreaseNumLikes() {
-  //   let newLikes = this.state.numberOfLikes - 1;
-  //   this.state.numberOfLikes = newLikes;
-  // }
 
   clearLike() {
     this.setLikeListWithHistory([]);
@@ -632,7 +732,7 @@ class Screen extends React.Component {
   }
 
   setSearchTerm(term) {
-    if(this.state.searchTerm !== term) {
+    if (this.state.searchTerm !== term) {
       this.setState({
         ...this.state,
         searchTerm: term,
@@ -641,18 +741,27 @@ class Screen extends React.Component {
   }
 
   render() {
-    let trailerPanel = <CentrePanel
-      movie={this.state.currentMovie}
-      onLike={this.onLike}
-      onWatch={this.onWatch}
-      onDislike={this.newMovie}
-      likedToggle={this.state.likedToggle}
-      watchedToggle={this.state.watchedToggle}
-    />
+    let trailerPanel = (
+      <CentrePanel
+        movie={this.state.currentMovie}
+        onLike={this.onLike}
+        onWatch={this.onWatch}
+        onDislike={this.newMovie}
+        likedToggle={this.state.likedToggle}
+        watchedToggle={this.state.watchedToggle}
+      />
+    );
 
-    let searchPanel = <SearchPanel searchTerm={this.state.searchTerm} setCurrentMovie={this.forceCurrentMovie} setSearchTerm={this.setSearchTerm}/>
+    let searchPanel = (
+      <SearchPanel
+        searchTerm={this.state.searchTerm}
+        setCurrentMovie={this.forceCurrentMovie}
+        setSearchTerm={this.setSearchTerm}
+      />
+    );
 
-    let centreContent = this.state.searchTerm !== "" ? searchPanel : trailerPanel;
+    let centreContent =
+      this.state.searchTerm !== "" ? searchPanel : trailerPanel;
 
     return (
       <div className="page">
@@ -671,13 +780,14 @@ class Screen extends React.Component {
                 : { width: "0%", scale: "scaleX(0)" }
             }
             label="Liked Movies"
-            movieList={this.state.likedList}f
+            movieList={this.state.likedList}
+            f
             removeItem={this.removeLike}
             clearList={this.clearLike}
             undoList={this.undoLike}
             setMovie={this.setCurrentMovie}
           />
-          
+
           {centreContent}
 
           <SidePanel

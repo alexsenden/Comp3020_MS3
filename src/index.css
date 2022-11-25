@@ -10,9 +10,7 @@
 
   --text-color: aliceblue;
 }
-* {
-  /* color: var(--text-color); */
-}
+
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
 }
@@ -234,11 +232,6 @@ video {
   width: 100%;
   height: 100%;
 }
-video::-webkit-media-controls-panel {
-  /*display: none !important;
-  opacity: 1 !important;
-  */
-}
 
 .movie-info {
   position: absolute;
@@ -326,6 +319,9 @@ video::-webkit-media-controls-panel {
   color: var(--background-color);
 }
 
+.clickable {
+  cursor: pointer;
+}
 .clickable:hover {
   filter: brightness(75%);
   transition: 0.2s;
@@ -355,6 +351,7 @@ video::-webkit-media-controls-panel {
 }
 
 .play-button {
+  cursor: pointer;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -430,4 +427,10 @@ video::-webkit-media-controls-panel {
 
 .search-result:hover .search-result-button {
   visibility: visible;
+}
+
+.hidden-video {
+  display: hidden;
+  height: 0;
+  width: 0;
 }
