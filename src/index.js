@@ -132,7 +132,12 @@ class BottomBar extends React.Component {
               onClick={this.props.toggleLiked}
               variant={this.props.likedToggle ? "warning" : "outline-warning"}
             >
-              <span class="badge">{this.props.numLikes}</span>
+              {/* the like badge is updated to a maximum of 9 */}
+              {this.props.numLikes < 10 ? (
+                <span className="badge"> {this.props.numLikes}</span>
+              ) : (
+                <span className="badge"> 9+</span>
+              )}
               <BsBookmarkHeartFill size="2rem" color="white" /> Likes
             </Button>
           </div>
@@ -171,16 +176,17 @@ class CentrePanel extends React.Component {
   }
 
   render() {
-    let controlsOffset = this.props.watchedToggle ?
-      (this.props.likedToggle ? `23%` : `28%`)
+    let controlsOffset = this.props.watchedToggle
+      ? this.props.likedToggle
+        ? `23%`
+        : `28%`
       : `5%`;
 
     let playButtonOffset = `50%`;
-    if(this.props.watchedToggle && !this.props.likedToggle) {
+    if (this.props.watchedToggle && !this.props.likedToggle) {
       playButtonOffset = `38.5%`;
-    }
-    else if(!this.props.watchedToggle && this.props.likedToggle) {
-      playButtonOffset = `61.5%`
+    } else if (!this.props.watchedToggle && this.props.likedToggle) {
+      playButtonOffset = `61.5%`;
     }
 
     return (
@@ -205,20 +211,23 @@ class CentrePanel extends React.Component {
             <p>{this.props.movie.description}</p>
           </div>
         </div>
-        <div 
+        <div
           className="play-button overlay-component transparent-item"
-          style={{left: playButtonOffset}}
+          style={{ left: playButtonOffset }}
         >
-          <BsPlayCircle 
-            size="5rem" 
-            color="white" 
+          <BsPlayCircle
+            size="5rem"
+            color="white"
             onClick={() => {
               this.props.onWatch(this.props.movie);
               this.toggleFullScreen();
             }}
           />
         </div>
-        <div className="center-div bottom-fix overlay-component transparent-item" style={{right: controlsOffset}}>
+        <div
+          className="center-div bottom-fix overlay-component transparent-item"
+          style={{ right: controlsOffset }}
+        >
           <CentrePanelControls
             onLike={this.props.onLike}
             onDislike={this.props.onDislike}
@@ -466,22 +475,23 @@ class Screen extends React.Component {
     this.removeWatch = this.removeWatch.bind(this);
     this.clearWatch = this.clearWatch.bind(this);
     this.undoWatch = this.undoWatch.bind(this);
-
+    
     this.toggleLiked = this.toggleLiked.bind(this);
     this.toggleWatched = this.toggleWatched.bind(this);
-
+    
     this.newMovie = this.newMovie.bind(this);
     this.setCurrentMovie = this.setCurrentMovie.bind(this);
-
+    this.forceCurrentMovie = this.forceCurrentMovie.bind(this);
+    
     this.selectGenre = this.selectGenre.bind(this);
     this.setSearchTerm = this.setSearchTerm.bind(this);
-    this.forceCurrentMovie = this.forceCurrentMovie.bind(this);
   }
 
   addLike(item) {
     let newState = this.state.likedList.slice();
     newState.push(item);
     this.setLikeListWithHistory(newState);
+    // this.increaseNumLikes();
   }
 
   removeLike(index) {
@@ -490,6 +500,15 @@ class Screen extends React.Component {
     this.setLikeListWithHistory(newState);
   }
 
+  // increaseNumLikes() {
+  //   let newLikes = this.state.numberOfLikes + 1;
+  //   this.state.numberOfLikes = newLikes;
+  // }
+  // decreaseNumLikes() {
+  //   let newLikes = this.state.numberOfLikes - 1;
+  //   this.state.numberOfLikes = newLikes;
+  // }
+
   clearLike() {
     this.setLikeListWithHistory([]);
   }
@@ -497,6 +516,7 @@ class Screen extends React.Component {
   setLikeListWithHistory(newList) {
     this.state.likedHistory.push(this.state.likedList);
     this.state.likedList = newList;
+    this.state.numberOfLikes = newList.length;
     this.setState({
       ...this.state,
       likedList: newList,
@@ -509,6 +529,7 @@ class Screen extends React.Component {
     this.setState({
       ...this.state,
       likedList: this.state.likedHistory.pop(),
+      numberOfLikes: this.state.likedHistory.length,
     });
   }
 
