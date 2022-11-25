@@ -249,7 +249,7 @@ video {
 .movie-info {
   position: absolute;
   overflow: scroll;
-  bottom: 5%;
+  bottom: 0%;
   max-height: 50%;
   width: 40%;
   z-index: 2;
