@@ -255,11 +255,13 @@ class CentrePanel extends React.Component {
             <p>{this.props.movie.description}</p>
           </div>
         </div>
+        {/*
         <img
           className="gradient-overlay"
           src={gradient}
           alt={"gradient"}
         />
+        */}
         <div
           className="play-button overlay-component transparent-item"
           style={{ left: playButtonOffset }}
