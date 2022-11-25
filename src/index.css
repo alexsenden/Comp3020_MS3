@@ -150,6 +150,7 @@ li {
   border-radius: 50%;
   background-color: var(--tertiary-color);
   color: white;
+  animation: expand 0.1s;
 }
 
 .watched-toggle {
@@ -168,6 +169,7 @@ li {
   border-radius: 50%;
   background-color: var(--tertiary-color);
   color: white;
+  animation: expand 0.1s;
 }
 
 .searchbar {
@@ -442,4 +444,13 @@ video {
   display: hidden;
   height: 0;
   width: 0;
+}
+
+@keyframes expand {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }

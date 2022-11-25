@@ -154,7 +154,11 @@ class BottomBar extends React.Component {
             >
               {/* the like badge is updated to a maximum of 9 */}
               {this.props.numLikes < 10 ? (
-                <span className="badge"> {this.props.numLikes}</span>
+                this.props.numLikes > 0 ? (
+                  <span className="badge"> {this.props.numLikes}</span>
+                ) : (
+                  <div />
+                )
               ) : (
                 <span className="badge"> 9+</span>
               )}
@@ -183,7 +187,11 @@ class BottomBar extends React.Component {
             >
               {/* the like badge is updated to a maximum of 9 */}
               {this.props.numWatched < 10 ? (
-                <span className="badge"> {this.props.numWatched}</span>
+                this.props.numWatched > 0 ? (
+                  <span className="badge"> {this.props.numWatched}</span>
+                ) : (
+                  <div />
+                )
               ) : (
                 <span className="badge"> 9+</span>
               )}
@@ -638,7 +646,6 @@ class Screen extends React.Component {
   setLikeListWithHistory(newList) {
     this.state.likedHistory.push(this.state.likedList);
     this.state.likedList = newList;
-    this.state.numberOfLikes = newList.length;
     this.setState({
       ...this.state,
       likedList: newList,
@@ -651,7 +658,6 @@ class Screen extends React.Component {
     this.setState({
       ...this.state,
       likedList: this.state.likedHistory.pop(),
-      numberOfLikes: this.state.likedHistory.length,
     });
   }
 
