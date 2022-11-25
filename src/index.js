@@ -9,7 +9,7 @@ import {
   BsClockHistory,
   BsPlayCircle,
 } from "react-icons/bs";
-import { AiOutlineClose, AiOutlineUndo } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineUndo, AiOutlineSearch, AiOutlineEye, AiOutlineInfoCircle } from "react-icons/ai";
 import "./index.css";
 
 import { movieInfo, genre } from "./MovieInfo";
@@ -104,7 +104,25 @@ class SidePanel extends React.Component {
 }
 
 class BottomBar extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.onSearch = this.onSearch.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
+  }
+
+  onSearch(event) {
+    this.props.setSearchTerm(event.target.value);
+  }
+
+  clearSearch() {
+    this.refs.searchbar.value = "";
+    this.props.setSearchTerm("");
+  }
+
   render() {
+    let searchButton = this.props.searchActive ? <button class="btn btn-danger" type="button" onClick={() => this.clearSearch()}><AiOutlineClose /></button> : <span class="input-group-text"><AiOutlineSearch /></span>
+
     return (
       <div className="bottom-bar">
         <div>
@@ -114,9 +132,9 @@ class BottomBar extends React.Component {
               onClick={this.props.toggleLiked}
               variant={this.props.likedToggle ? "warning" : "outline-warning"}
             >
-              {/* the likeb badge is updated to a maximum of 9 */}
-              {this.props.numberOfLikes < 10 ? (
-                <span className="badge"> {this.props.numberOfLikes}</span>
+              {/* the like badge is updated to a maximum of 9 */}
+              {this.props.numLikes < 10 ? (
+                <span className="badge"> {this.props.numLikes}</span>
               ) : (
                 <span className="badge"> 9+</span>
               )}
@@ -124,13 +142,9 @@ class BottomBar extends React.Component {
             </Button>
           </div>
         </div>
-        <div>
-          <input
-            className="searchbar"
-            type="text"
-            alt="Search Bar"
-            placeholder="Search Movies..."
-          ></input>
+        <div class="input-group searchbar">
+          <input id="searchbar" ref="searchbar" type="text" class="form-control" placeholder="Search Movies..." aria-label="Search Movies..." aria-describedby="button-addon2" onChange={this.onSearch}/>
+          {searchButton}
         </div>
         <div>
           <div className="watched-toggle clickable">
@@ -335,6 +349,107 @@ class TabBar extends React.Component {
   }
 }
 
+class SearchPanel extends React.Component {
+  render() {
+    return(
+      <div className="centre-panel">
+        <p className="search-result-title">Showing Results for "{this.props.searchTerm}"</p>
+        <SearchResultList searchTerm={this.props.searchTerm} setCurrentMovie={this.props.setCurrentMovie} setSearchTerm={this.props.setSearchTerm}/>
+      </div>
+    );
+  }
+}
+
+class SearchResultList extends React.Component {
+  getMoviesFromSearchTerm(searchTerm) {
+    let term = searchTerm.toLowerCase();
+    let movieList = [];
+    
+    movieInfo.forEach((m) => {
+      if(m.title.toLowerCase().indexOf(term) != -1) {
+        movieList.push(m);
+      }
+    });
+
+    movieList.sort((a, b) => a.title.toLowerCase().indexOf(term) - b.title.toLowerCase().indexOf(term))
+
+    return movieList;
+  }
+
+  render() {
+    let movieList = this.getMoviesFromSearchTerm(this.props.searchTerm);
+
+    let listItems = movieList.map((m, idx) => (
+      <li key={idx}>
+        <SearchResult
+          movie={m}
+          setMovie={this.props.setMovie}
+          removeItem={() => this.props.removeItem(idx)}
+          setCurrentMovie={this.props.setCurrentMovie}
+          setSearchTerm={this.props.setSearchTerm}
+        />
+      </li>
+    ));
+
+    return <div className="search-result-collection">{listItems}</div>;
+  }
+}
+
+class SearchResult extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.viewInformation = this.viewInformation.bind(this);
+  }
+
+  viewInformation() {
+    this.props.setCurrentMovie(this.props.movie);
+    document.getElementById("searchbar").value = "";
+    this.props.setSearchTerm("");
+  }
+
+  render() {
+    return (
+      <div className="icon-block">
+        <div
+          className="search-result"
+        >
+          <img
+            className="icon"
+            src={this.props.movie.coverRoute}
+            alt={this.props.movie.title + " Cover"}
+          />
+          <div>
+            <div className="icon-text">{this.props.movie.title}</div>
+            <img
+                className="small-rating"
+                src={this.props.movie.rating}
+                alt="Rating"
+              />
+          </div>
+          <div className="search-result-button-collection">
+            <button 
+              type="button"
+              class="btn btn-sm btn-outline-light search-result-button"
+              onClick={() => this.viewInformation()}
+              block
+              >
+                <AiOutlineInfoCircle /> View Information
+            </button>
+            <button 
+              type="button"
+              class="btn btn-sm btn-outline-light search-result-button"
+              block
+              >
+                <AiOutlineEye /> Watch Now 
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 class Screen extends React.Component {
   constructor(props) {
     super(props);
@@ -348,7 +463,7 @@ class Screen extends React.Component {
       watchedList: [],
       watchedHistory: [],
       currentGenre: genre.forYou,
-      numberOfLikes: 0,
+      searchTerm: "",
     };
 
     this.onLike = this.onLike.bind(this);
@@ -360,16 +475,16 @@ class Screen extends React.Component {
     this.removeWatch = this.removeWatch.bind(this);
     this.clearWatch = this.clearWatch.bind(this);
     this.undoWatch = this.undoWatch.bind(this);
-
+    
     this.toggleLiked = this.toggleLiked.bind(this);
     this.toggleWatched = this.toggleWatched.bind(this);
-
+    
     this.newMovie = this.newMovie.bind(this);
     this.setCurrentMovie = this.setCurrentMovie.bind(this);
-
+    this.forceCurrentMovie = this.forceCurrentMovie.bind(this);
+    
     this.selectGenre = this.selectGenre.bind(this);
-
-    // this.increaseNumLikes = this.increaseNumLikes.bind(this);
+    this.setSearchTerm = this.setSearchTerm.bind(this);
   }
 
   addLike(item) {
@@ -487,6 +602,10 @@ class Screen extends React.Component {
     });
   }
 
+  forceCurrentMovie(movie) {
+    this.state.currentMovie = movie;
+  }
+
   onLike() {
     if (!this.state.likedList.includes(this.state.currentMovie)) {
       this.addLike(this.state.currentMovie);
@@ -512,7 +631,29 @@ class Screen extends React.Component {
     }
   }
 
+  setSearchTerm(term) {
+    if(this.state.searchTerm !== term) {
+      this.setState({
+        ...this.state,
+        searchTerm: term,
+      });
+    }
+  }
+
   render() {
+    let trailerPanel = <CentrePanel
+      movie={this.state.currentMovie}
+      onLike={this.onLike}
+      onWatch={this.onWatch}
+      onDislike={this.newMovie}
+      likedToggle={this.state.likedToggle}
+      watchedToggle={this.state.watchedToggle}
+    />
+
+    let searchPanel = <SearchPanel searchTerm={this.state.searchTerm} setCurrentMovie={this.forceCurrentMovie} setSearchTerm={this.setSearchTerm}/>
+
+    let centreContent = this.state.searchTerm !== "" ? searchPanel : trailerPanel;
+
     return (
       <div className="page">
         <div>
@@ -530,20 +671,14 @@ class Screen extends React.Component {
                 : { width: "0%", scale: "scaleX(0)" }
             }
             label="Liked Movies"
-            movieList={this.state.likedList}
+            movieList={this.state.likedList}f
             removeItem={this.removeLike}
             clearList={this.clearLike}
             undoList={this.undoLike}
             setMovie={this.setCurrentMovie}
           />
-          <CentrePanel
-            movie={this.state.currentMovie}
-            onLike={this.onLike}
-            onWatch={this.onWatch}
-            onDislike={this.newMovie}
-            likedToggle={this.state.likedToggle}
-            watchedToggle={this.state.watchedToggle}
-          />
+          
+          {centreContent}
 
           <SidePanel
             visibility={
@@ -563,9 +698,11 @@ class Screen extends React.Component {
           <BottomBar
             toggleLiked={this.toggleLiked}
             likedToggle={this.state.likedToggle}
-            numberOfLikes={this.state.numberOfLikes}
             toggleWatched={this.toggleWatched}
             watchedToggle={this.state.watchedToggle}
+            numLikes={this.state.likedList.length}
+            setSearchTerm={this.setSearchTerm}
+            searchActive={this.state.searchTerm !== ""}
           />
         </div>
       </div>

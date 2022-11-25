@@ -166,7 +166,6 @@ li {
 .searchbar {
   height: 30px;
   width: 40vw;
-  padding: 20px;
   color: #181818;
   border-radius: 10px;
 }
@@ -176,11 +175,10 @@ li {
   height: 100%;
   margin: 0px 0px 0px 0px;
   color: var(--text-color);
-  overflow: scroll;
   overflow-x: hidden;
   box-shadow: -2px 7px 35px -12px var(--shadows);
   border-radius: 10px;
-  animation: fadeIn 5s;
+  animation: fadeIn 1s;
 }
 
 .center-div {
@@ -369,4 +367,67 @@ video::-webkit-media-controls-panel {
 .play-button:active {
   transition: 0s;
   filter: brightness(60%);
+}
+
+.small-rating {
+  height: 14px;
+  width: 75px;
+}
+
+.search-result-collection {
+  overflow: scroll;
+  overflow-x: hidden;
+  height: calc(100% - 60px);
+  margin-right: 5%;
+}
+.search-result-collection::-webkit-scrollbar {
+  width: 2px;
+  background: transparent;
+}
+.search-result-collection::-webkit-scrollbar-thumb {
+  background: #e3e3e3;
+}
+
+.search-result-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+.search-result-button-collection {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  margin-left: auto;
+  margin-right: 15px;
+}
+
+.search-result-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  visibility: hidden;
+}
+
+.search-result {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  width: 90%;
+  height: 100px;
+  border: 2px solid #e3e3e3;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+}
+.search-result:hover {
+  border: 3px solid #838383;
+}
+
+.search-result:hover .search-result-button {
+  visibility: visible;
 }
