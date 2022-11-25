@@ -146,10 +146,11 @@ li {
   position: absolute;
   top: -10px;
   right: -20px;
-  padding: 5px 10px;
+  padding: 5px 8px;
   border-radius: 50%;
   background-color: var(--tertiary-color);
   color: white;
+  animation: expand 0.1s;
 }
 
 .watched-toggle {
@@ -159,6 +160,16 @@ li {
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 8vw;
+}
+.watched-toggle .badge {
+  position: absolute;
+  top: -10px;
+  right: -35px;
+  padding: 5px 8px;
+  border-radius: 50%;
+  background-color: var(--tertiary-color);
+  color: white;
+  animation: expand 0.1s;
 }
 
 .searchbar {
@@ -214,6 +225,7 @@ li {
 }
 
 .trailer {
+  position: relative;
   width: 100%;
   height: 100%;
   animation: fadeIn 5s;
@@ -228,6 +240,7 @@ li {
   }
 }
 video {
+  position: relative;
   object-fit: fill;
   width: 100%;
   height: 100%;
@@ -239,6 +252,7 @@ video {
   bottom: 5%;
   max-height: 50%;
   width: 40%;
+  z-index: 2;
 }
 .movie-info::-webkit-scrollbar {
   display: none;
@@ -433,4 +447,25 @@ video {
   display: hidden;
   height: 0;
   width: 0;
+}
+
+@keyframes expand {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color:rgba(0, 0, 0, 0);
 }

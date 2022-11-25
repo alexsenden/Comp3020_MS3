@@ -23,6 +23,7 @@ import "./index.css";
 import { movieInfo, genre } from "./MovieInfo";
 
 import xButtonIcon from "./images/X.png";
+import gradient from "./images/gradient.png";
 
 class SmallIcon extends React.Component {
   render() {
@@ -154,7 +155,11 @@ class BottomBar extends React.Component {
             >
               {/* the like badge is updated to a maximum of 9 */}
               {this.props.numLikes < 10 ? (
-                <span className="badge"> {this.props.numLikes}</span>
+                this.props.numLikes > 0 ? (
+                  <span className="badge"> {this.props.numLikes}</span>
+                ) : (
+                  <div />
+                )
               ) : (
                 <span className="badge"> 9+</span>
               )}
@@ -181,6 +186,16 @@ class BottomBar extends React.Component {
               onClick={this.props.toggleWatched}
               variant={this.props.watchedToggle ? "warning" : "outline-warning"}
             >
+              {/* the like badge is updated to a maximum of 9 */}
+              {this.props.numWatched < 10 ? (
+                this.props.numWatched > 0 ? (
+                  <span className="badge"> {this.props.numWatched}</span>
+                ) : (
+                  <div />
+                )
+              ) : (
+                <span className="badge"> 9+</span>
+              )}
               <BsClockHistory size="2rem" color="white" /> History
             </Button>
           </div>
@@ -240,6 +255,13 @@ class CentrePanel extends React.Component {
             <p>{this.props.movie.description}</p>
           </div>
         </div>
+        {/*
+        <img
+          className="gradient-overlay"
+          src={gradient}
+          alt={"gradient"}
+        />
+        */}
         <div
           className="play-button overlay-component transparent-item"
           style={{ left: playButtonOffset }}
@@ -387,6 +409,7 @@ class SearchPanel extends React.Component {
           searchTerm={this.props.searchTerm}
           setCurrentMovie={this.props.setCurrentMovie}
           setSearchTerm={this.props.setSearchTerm}
+          addWatch={this.props.addWatch}
         />
       </div>
     );
@@ -424,6 +447,7 @@ class SearchResultList extends React.Component {
           removeItem={() => this.props.removeItem(idx)}
           setCurrentMovie={this.props.setCurrentMovie}
           setSearchTerm={this.props.setSearchTerm}
+          addWatch={this.props.addWatch}
         />
       </li>
     ));
@@ -453,6 +477,7 @@ class SearchResult extends React.Component {
   }
 
   watchNow() {
+    this.props.addWatch(this.props.movie);
     this.setState(
       {
         ...this.state,
@@ -597,6 +622,7 @@ class Screen extends React.Component {
     this.removeWatch = this.removeWatch.bind(this);
     this.clearWatch = this.clearWatch.bind(this);
     this.undoWatch = this.undoWatch.bind(this);
+    this.addWatch = this.addWatch.bind(this);
 
     this.toggleLiked = this.toggleLiked.bind(this);
     this.toggleWatched = this.toggleWatched.bind(this);
@@ -628,7 +654,6 @@ class Screen extends React.Component {
   setLikeListWithHistory(newList) {
     this.state.likedHistory.push(this.state.likedList);
     this.state.likedList = newList;
-    this.state.numberOfLikes = newList.length;
     this.setState({
       ...this.state,
       likedList: newList,
@@ -641,14 +666,15 @@ class Screen extends React.Component {
     this.setState({
       ...this.state,
       likedList: this.state.likedHistory.pop(),
-      numberOfLikes: this.state.likedHistory.length,
     });
   }
 
   addWatch(item) {
-    let newState = this.state.watchedList.slice();
-    newState.push(item);
-    this.setWatchedListWithHistory(newState);
+    if (!this.state.watchedList.includes(item)) {
+      let newState = this.state.watchedList.slice();
+      newState.push(item);
+      this.setWatchedListWithHistory(newState);
+    }
   }
 
   removeWatch(index) {
@@ -726,9 +752,7 @@ class Screen extends React.Component {
   }
 
   onWatch() {
-    if (!this.state.watchedList.includes(this.state.currentMovie)) {
-      this.addWatch(this.state.currentMovie);
-    }
+    this.addWatch(this.state.currentMovie);
   }
 
   selectGenre(genre) {
@@ -769,6 +793,7 @@ class Screen extends React.Component {
         searchTerm={this.state.searchTerm}
         setCurrentMovie={this.forceCurrentMovie}
         setSearchTerm={this.setSearchTerm}
+        addWatch={this.addWatch}
       />
     );
 
@@ -823,6 +848,7 @@ class Screen extends React.Component {
             toggleWatched={this.toggleWatched}
             watchedToggle={this.state.watchedToggle}
             numLikes={this.state.likedList.length}
+            numWatched={this.state.watchedList.length}
             setSearchTerm={this.setSearchTerm}
             searchActive={this.state.searchTerm !== ""}
           />
