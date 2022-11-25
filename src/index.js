@@ -438,7 +438,7 @@ class SearchResult extends React.Component {
 
     this.state = {
       fullscreenActive: false,
-    }
+    };
 
     this.viewInformation = this.viewInformation.bind(this);
     this.watchNow = this.watchNow.bind(this);
@@ -453,13 +453,14 @@ class SearchResult extends React.Component {
   }
 
   watchNow() {
-    this.setState({
-      ...this.state,
-      fullscreenActive: true,
-    }, 
-    () => {
-      this.toggleFullScreen();
-    }
+    this.setState(
+      {
+        ...this.state,
+        fullscreenActive: true,
+      },
+      () => {
+        this.toggleFullScreen();
+      }
     );
   }
 
@@ -519,10 +520,14 @@ class SearchResult extends React.Component {
             </button>
           </div>
         </div>
-        { this.state.fullscreenActive 
-          ? <HiddenVideo movie={this.props.movie} closeHiddenVideo={this.closeHiddenVideo} />
-          : <div/>
-        }
+        {this.state.fullscreenActive ? (
+          <HiddenVideo
+            movie={this.props.movie}
+            closeHiddenVideo={this.closeHiddenVideo}
+          />
+        ) : (
+          <div />
+        )}
       </div>
     );
   }
@@ -534,28 +539,35 @@ class HiddenVideo extends React.Component {
 
     this.state = {
       fullscreen: false,
-    }
+    };
   }
 
   componentDidMount() {
-    document.getElementById("hidden-video-" + this.props.movie.title).addEventListener('fullscreenchange', () => {
-      if(!this.state.fullscreen) {
-        this.setState({
-          ...this.state,
-          fullscreen: true,
-        })
-      }
-      else {
-        this.props.closeHiddenVideo();
-      }
-    });
+    document
+      .getElementById("hidden-video-" + this.props.movie.title)
+      .addEventListener("fullscreenchange", () => {
+        if (!this.state.fullscreen) {
+          this.setState({
+            ...this.state,
+            fullscreen: true,
+          });
+        } else {
+          this.props.closeHiddenVideo();
+        }
+      });
   }
 
   render() {
     return (
-      <video id={"hidden-video-" + this.props.movie.title} className="hidden-video" key={this.props.movie.title} controls autoPlay>
+      <video
+        id={"hidden-video-" + this.props.movie.title}
+        className="hidden-video"
+        key={this.props.movie.title}
+        controls
+        autoPlay
+      >
         <source src={this.props.movie.trailer}></source>
-      </video> 
+      </video>
     );
   }
 }
