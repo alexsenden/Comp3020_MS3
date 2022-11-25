@@ -9,7 +9,7 @@ import {
   BsClockHistory,
   BsPlayCircle,
 } from "react-icons/bs";
-import { AiOutlineClose, AiOutlineUndo } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineUndo, AiOutlineSearch } from "react-icons/ai";
 import "./index.css";
 
 import { movieInfo, genre } from "./MovieInfo";
@@ -108,13 +108,21 @@ class BottomBar extends React.Component {
     super(props);
 
     this.onSearch = this.onSearch.bind(this);
+    this.clearSearch = this.clearSearch.bind(this);
   }
 
   onSearch(event) {
     this.props.setSearchTerm(event.target.value);
   }
 
+  clearSearch() {
+    this.refs.searchbar.value = "";
+    this.props.setSearchTerm("");
+  }
+
   render() {
+    let searchButton = this.props.searchActive ? <button class="btn btn-danger" type="button" onClick={() => this.clearSearch()}><AiOutlineClose /></button> : <span class="input-group-text"><AiOutlineSearch /></span>
+
     return (
       <div className="bottom-bar">
         <div>
@@ -130,8 +138,8 @@ class BottomBar extends React.Component {
           </div>
         </div>
         <div class="input-group searchbar">
-          <input id="searchbar" type="text" class="form-control" placeholder="Search Movies..." aria-label="Search Movies..." aria-describedby="button-addon2" onChange={this.onSearch}/>
-          <button class="btn btn-danger" type="button" id="button-addon2">Button</button>
+          <input id="searchbar" ref="searchbar" type="text" class="form-control" placeholder="Search Movies..." aria-label="Search Movies..." aria-describedby="button-addon2" onChange={this.onSearch}/>
+          {searchButton}
         </div>
         <div>
           <div className="watched-toggle clickable">
@@ -587,7 +595,7 @@ class Screen extends React.Component {
 
     let searchPanel = <SearchPanel searchTerm={this.state.searchTerm}/>
 
-    let centreContent = (document.activeElement.id === "search" || true) ? searchPanel : trailerPanel;
+    let centreContent = this.state.searchTerm !== "" ? searchPanel : trailerPanel;
 
     return (
       <div className="page">
@@ -637,6 +645,7 @@ class Screen extends React.Component {
             watchedToggle={this.state.watchedToggle}
             numLikes={this.state.likedList.length}
             setSearchTerm={this.setSearchTerm}
+            searchActive={this.state.searchTerm !== ""}
           />
         </div>
       </div>

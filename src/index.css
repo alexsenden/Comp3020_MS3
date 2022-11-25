@@ -175,11 +175,10 @@ li {
   height: 100%;
   margin: 0px 0px 0px 0px;
   color: var(--text-color);
-  /*overflow: scroll;*/
   overflow-x: hidden;
   box-shadow: -2px 7px 35px -12px var(--shadows);
   border-radius: 10px;
-  animation: fadeIn 5s;
+  animation: fadeIn 1s;
 }
 
 .center-div {

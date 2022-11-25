@@ -62,7 +62,7 @@ export const genre = {
 
 export const movieInfo = [
     {
-        title: "Airplane",
+        title: "Airplane!",
         coverRoute: AirplaneCover,
         genres: [genre.comedy, genre.parody, genre.disaster, genre.romance, genre.satire],
         trailer: AirplaneTrailer,
