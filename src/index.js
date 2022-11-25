@@ -345,7 +345,7 @@ class SearchPanel extends React.Component {
     return(
       <div className="centre-panel">
         <p className="search-result-title">Showing Results for "{this.props.searchTerm}"</p>
-        <SearchResultList searchTerm={this.props.searchTerm} />
+        <SearchResultList searchTerm={this.props.searchTerm} setCurrentMovie={this.props.setCurrentMovie} setSearchTerm={this.props.setSearchTerm}/>
       </div>
     );
   }
@@ -376,6 +376,8 @@ class SearchResultList extends React.Component {
           movie={m}
           setMovie={this.props.setMovie}
           removeItem={() => this.props.removeItem(idx)}
+          setCurrentMovie={this.props.setCurrentMovie}
+          setSearchTerm={this.props.setSearchTerm}
         />
       </li>
     ));
@@ -385,11 +387,23 @@ class SearchResultList extends React.Component {
 }
 
 class SearchResult extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.viewInformation = this.viewInformation.bind(this);
+  }
+
+  viewInformation() {
+    this.props.setCurrentMovie(this.props.movie);
+    document.getElementById("searchbar").value = "";
+    this.props.setSearchTerm("");
+  }
+
   render() {
     return (
       <div className="icon-block">
         <div
-          className="small-movie-info clickable"
+          className="search-result"
         >
           <img
             className="icon"
@@ -408,6 +422,7 @@ class SearchResult extends React.Component {
             <button 
               type="button"
               class="btn btn-sm btn-outline-light search-result-button"
+              onClick={() => this.viewInformation()}
               block
               >
                 <AiOutlineInfoCircle /> View Information
@@ -460,6 +475,7 @@ class Screen extends React.Component {
 
     this.selectGenre = this.selectGenre.bind(this);
     this.setSearchTerm = this.setSearchTerm.bind(this);
+    this.forceCurrentMovie = this.forceCurrentMovie.bind(this);
   }
 
   addLike(item) {
@@ -565,6 +581,10 @@ class Screen extends React.Component {
     });
   }
 
+  forceCurrentMovie(movie) {
+    this.state.currentMovie = movie;
+  }
+
   onLike() {
     if (!this.state.likedList.includes(this.state.currentMovie)) {
       this.addLike(this.state.currentMovie);
@@ -609,7 +629,7 @@ class Screen extends React.Component {
       watchedToggle={this.state.watchedToggle}
     />
 
-    let searchPanel = <SearchPanel searchTerm={this.state.searchTerm}/>
+    let searchPanel = <SearchPanel searchTerm={this.state.searchTerm} setCurrentMovie={this.forceCurrentMovie} setSearchTerm={this.setSearchTerm}/>
 
     let centreContent = this.state.searchTerm !== "" ? searchPanel : trailerPanel;
 
