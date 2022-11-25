@@ -385,15 +385,6 @@ class Screen extends React.Component {
     this.setLikeListWithHistory(newState);
   }
 
-  // increaseNumLikes() {
-  //   let newLikes = this.state.numberOfLikes + 1;
-  //   this.state.numberOfLikes = newLikes;
-  // }
-  // decreaseNumLikes() {
-  //   let newLikes = this.state.numberOfLikes - 1;
-  //   this.state.numberOfLikes = newLikes;
-  // }
-
   clearLike() {
     this.setLikeListWithHistory([]);
   }
