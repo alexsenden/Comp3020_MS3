@@ -236,16 +236,11 @@ class CentrePanel extends React.Component {
     let gradientRight = this.props.watchedToggle ? `25.805%` : `40px`;
     let gradientLeft = this.props.likedToggle ? `25.805%` : `40px`;
 
-    console.log("resizing")
-    console.log(this.props.watchedToggle)
-    console.log(this.props.likedToggle)
-    if(this.props.watchedToggle && this.props.likedToggle) {
-      console.log("both")
+    if (this.props.watchedToggle && this.props.likedToggle) {
       let centralGradient = `calc(20.625% + 10px)`;
       gradientLeft = centralGradient;
       gradientRight = centralGradient;
     }
-    console.log("resized")
 
     return (
       <div className="centre-panel">
