@@ -2,12 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 
 import {
   BsHeart,
   BsBookmarkHeartFill,
   BsClockHistory,
   BsPlayCircle,
+  BsSearch,
 } from "react-icons/bs";
 import { AiOutlineClose, AiOutlineUndo } from "react-icons/ai";
 import "./index.css";
@@ -130,7 +133,34 @@ class BottomBar extends React.Component {
             type="text"
             alt="Search Bar"
             placeholder="Search Movies..."
+            onChange={this.props.searchBarChange}
           ></input>
+          {this.props.hasInput ? (
+            <div className="search-result">
+              {this.props.result.map((m, idx) => (
+                <li key={idx}>
+                  <SmallIcon
+                    movie={m}
+                    setMovie={this.props.setMovie}
+                    removeItem={() => this.props.removeItem(idx)}
+                  />
+                </li>
+              ))}
+            </div>
+          ) : null}
+          {/* <InputGroup
+            className="searchbar mb-3"
+            
+          >
+            <InputGroup.Text id="searchBar">
+              <BsSearch />
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="Search by title, genre or description"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+            />
+          </InputGroup> */}
         </div>
         <div>
           <div className="watched-toggle clickable">
@@ -349,6 +379,8 @@ class Screen extends React.Component {
       watchedHistory: [],
       currentGenre: genre.forYou,
       numberOfLikes: 0,
+      searchResult: [],
+      hasInput: false,
     };
 
     this.onLike = this.onLike.bind(this);
@@ -368,15 +400,34 @@ class Screen extends React.Component {
     this.setCurrentMovie = this.setCurrentMovie.bind(this);
 
     this.selectGenre = this.selectGenre.bind(this);
-
-    // this.increaseNumLikes = this.increaseNumLikes.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
+
+  handleSearchChange = (e) => {
+    if (!e.target.value) {
+      this.setState((state) => ({
+        ...state,
+        hasInput: false,
+      }));
+      return;
+    } else {
+      const result = movieInfo.filter(
+        (movie) =>
+          movie.title.includes(e.target.value) ||
+          movie.description.includes(e.target.value)
+      );
+      this.setState((state) => ({
+        ...state,
+        hasInput: true,
+        searchResult: result,
+      }));
+    }
+  };
 
   addLike(item) {
     let newState = this.state.likedList.slice();
     newState.push(item);
     this.setLikeListWithHistory(newState);
-    // this.increaseNumLikes();
   }
 
   removeLike(index) {
@@ -557,6 +608,9 @@ class Screen extends React.Component {
             numberOfLikes={this.state.numberOfLikes}
             toggleWatched={this.toggleWatched}
             watchedToggle={this.state.watchedToggle}
+            searchBarChange={this.handleSearchChange}
+            hasInput={this.state.hasInput}
+            result={this.state.searchResult}
           />
         </div>
       </div>

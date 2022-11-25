@@ -183,6 +183,19 @@ li {
   animation: fadeIn 5s;
 }
 
+.search-result {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  z-index: 100;
+  top: -100%;
+  color: var(--text-color);
+  /* max-height: 80%; */
+  height: fit-content;
+  width: 50%;
+  background-color: var(--background-color);
+}
+
 .center-div {
   margin-right: auto;
   margin-left: auto;
@@ -220,7 +233,7 @@ li {
 .trailer {
   width: 100%;
   height: 100%;
-  animation: fadeIn 5s;
+  animation: fadeIn 3s;
   overflow: hidden;
 }
 @keyframes fadeIn {
