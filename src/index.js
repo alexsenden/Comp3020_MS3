@@ -9,7 +9,7 @@ import {
   BsClockHistory,
   BsPlayCircle,
 } from "react-icons/bs";
-import { AiOutlineClose, AiOutlineUndo, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineClose, AiOutlineUndo, AiOutlineSearch, AiOutlineEye, AiOutlineInfoCircle } from "react-icons/ai";
 import "./index.css";
 
 import { movieInfo, genre } from "./MovieInfo";
@@ -403,6 +403,22 @@ class SearchResult extends React.Component {
                 src={this.props.movie.rating}
                 alt="Rating"
               />
+          </div>
+          <div className="search-result-button-collection">
+            <button 
+              type="button"
+              class="btn btn-sm btn-outline-light search-result-button"
+              block
+              >
+                <AiOutlineInfoCircle /> View Information
+            </button>
+            <button 
+              type="button"
+              class="btn btn-sm btn-outline-light search-result-button"
+              block
+              >
+                <AiOutlineEye /> Watch Now 
+            </button>
           </div>
         </div>
       </div>

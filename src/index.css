@@ -395,3 +395,17 @@ video::-webkit-media-controls-panel {
   font-size: 30px;
   font-weight: bolder;
 }
+
+.search-result-button-collection {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  margin-left: auto;
+  margin-right: 15px;
+}
+
+.search-result-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
