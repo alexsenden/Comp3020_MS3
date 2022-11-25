@@ -225,6 +225,7 @@ li {
 }
 
 .trailer {
+  position: relative;
   width: 100%;
   height: 100%;
   animation: fadeIn 5s;
@@ -239,6 +240,7 @@ li {
   }
 }
 video {
+  position: relative;
   object-fit: fill;
   width: 100%;
   height: 100%;
@@ -250,6 +252,7 @@ video {
   bottom: 5%;
   max-height: 50%;
   width: 40%;
+  z-index: 2;
 }
 .movie-info::-webkit-scrollbar {
   display: none;
@@ -453,4 +456,16 @@ video {
   to {
     transform: scale(1);
   }
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color:rgba(0, 0, 0, 0);
 }
