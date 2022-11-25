@@ -105,6 +105,8 @@ class SidePanel extends React.Component {
 
 class BottomBar extends React.Component {
   render() {
+    this.props.setSearchTerm(document.getElementById("searchbar")?.value ?? "");
+
     return (
       <div className="bottom-bar">
         <div>
@@ -119,14 +121,9 @@ class BottomBar extends React.Component {
             </Button>
           </div>
         </div>
-        <div>
-          <input
-            id="search"
-            className="searchbar"
-            type="text"
-            alt="Search Bar"
-            placeholder="Search Movies..."
-          ></input>
+        <div class="input-group searchbar">
+          <input id="searchbar" type="text" class="form-control" placeholder="Search Movies..." aria-label="Search Movies..." aria-describedby="button-addon2"/>
+          <button class="btn btn-danger" type="button" id="button-addon2">Button</button>
         </div>
         <div>
           <div className="watched-toggle clickable">
@@ -329,11 +326,10 @@ class TabBar extends React.Component {
 
 class SearchPanel extends React.Component {
   render() {
-    let searchTerm = "a";
     return(
       <div className="centre-panel">
-        <p className="search-result-title">Showing Results for "{searchTerm}"</p>
-        <SearchResultList searchTerm={searchTerm} />
+        <p className="search-result-title">Showing Results for "{this.props.searchTerm}"</p>
+        <SearchResultList searchTerm={this.props.searchTerm} />
       </div>
     );
   }
@@ -345,12 +341,12 @@ class SearchResultList extends React.Component {
     let movieList = [];
     
     movieInfo.forEach((m) => {
-      if(m.title.indexOf(searchTerm) != -1) {
+      if(m.title.toLowerCase().indexOf(term) != -1) {
         movieList.push(m);
       }
     });
 
-    movieList.sort((a, b) => a.title.toLowerCase().indexOf(searchTerm) - b.title.toLowerCase().indexOf(searchTerm))
+    movieList.sort((a, b) => a.title.toLowerCase().indexOf(term) - b.title.toLowerCase().indexOf(term))
 
     return movieList;
   }
@@ -411,6 +407,7 @@ class Screen extends React.Component {
       watchedList: [],
       watchedHistory: [],
       currentGenre: genre.forYou,
+      searchTerm: "",
     };
 
     this.onLike = this.onLike.bind(this);
@@ -430,6 +427,7 @@ class Screen extends React.Component {
     this.setCurrentMovie = this.setCurrentMovie.bind(this);
 
     this.selectGenre = this.selectGenre.bind(this);
+    this.setSearchTerm = this.setSearchTerm.bind(this);
   }
 
   addLike(item) {
@@ -560,6 +558,13 @@ class Screen extends React.Component {
     }
   }
 
+  setSearchTerm(term) {
+    this.setState({
+      ...this.state,
+      searchTerm: term,
+  });
+  }
+
   render() {
     let trailerPanel = <CentrePanel
       movie={this.state.currentMovie}
@@ -570,7 +575,7 @@ class Screen extends React.Component {
       watchedToggle={this.state.watchedToggle}
     />
 
-    let searchPanel = <SearchPanel />
+    let searchPanel = <SearchPanel searchTerm={this.state.searchTerm}/>
 
     let centreContent = (document.activeElement.id === "search" || true) ? searchPanel : trailerPanel;
 
@@ -623,6 +628,7 @@ class Screen extends React.Component {
             toggleWatched={this.toggleWatched}
             watchedToggle={this.state.watchedToggle}
             numLikes={this.state.likedList.length}
+            setSearchTerm={this.setSearchTerm}
           />
         </div>
       </div>
