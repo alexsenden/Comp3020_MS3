@@ -104,9 +104,17 @@ class SidePanel extends React.Component {
 }
 
 class BottomBar extends React.Component {
-  render() {
-    this.props.setSearchTerm(document.getElementById("searchbar")?.value ?? "");
+  constructor(props){
+    super(props);
 
+    this.onSearch = this.onSearch.bind(this);
+  }
+
+  onSearch(event) {
+    this.props.setSearchTerm(event.target.value);
+  }
+
+  render() {
     return (
       <div className="bottom-bar">
         <div>
@@ -122,7 +130,7 @@ class BottomBar extends React.Component {
           </div>
         </div>
         <div class="input-group searchbar">
-          <input id="searchbar" type="text" class="form-control" placeholder="Search Movies..." aria-label="Search Movies..." aria-describedby="button-addon2"/>
+          <input id="searchbar" type="text" class="form-control" placeholder="Search Movies..." aria-label="Search Movies..." aria-describedby="button-addon2" onChange={this.onSearch}/>
           <button class="btn btn-danger" type="button" id="button-addon2">Button</button>
         </div>
         <div>
@@ -559,10 +567,12 @@ class Screen extends React.Component {
   }
 
   setSearchTerm(term) {
-    this.setState({
-      ...this.state,
-      searchTerm: term,
-  });
+    if(this.state.searchTerm !== term) {
+      this.setState({
+        ...this.state,
+        searchTerm: term,
+      });
+    }
   }
 
   render() {
@@ -578,8 +588,6 @@ class Screen extends React.Component {
     let searchPanel = <SearchPanel searchTerm={this.state.searchTerm}/>
 
     let centreContent = (document.activeElement.id === "search" || true) ? searchPanel : trailerPanel;
-
-    console.log(document.activeElement.id);
 
     return (
       <div className="page">
