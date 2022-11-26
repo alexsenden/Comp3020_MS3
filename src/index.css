@@ -476,3 +476,10 @@ video {
   z-index: 1;
   border-radius: 10px;
 }
+
+.no-results-text {
+  margin-top: 30vh;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 20px;
+}
