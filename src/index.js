@@ -617,9 +617,9 @@ class Screen extends React.Component {
       likedToggle: false,
       watchedToggle: false,
       likedList: [],
-      likedHistory: [],
+      removeLikeList: [],
       watchedList: [],
-      watchedHistory: [],
+      removeWatchList: [],
       currentGenre: genre.forYou,
       searchTerm: "",
     };
@@ -646,73 +646,91 @@ class Screen extends React.Component {
     this.setSearchTerm = this.setSearchTerm.bind(this);
   }
 
-  addLike(item) {
-    let newState = this.state.likedList.slice();
-    newState.push(item);
-    this.setLikeListWithHistory(newState);
+  addLike(movie) {
+    this.state.likedList.push(movie);
+    this.setState({
+      ...this.state,
+      removeLikeList: [],
+    });
   }
 
   removeLike(index) {
-    let newState = this.state.likedList.slice();
-    newState.splice(index, 1);
-    this.setLikeListWithHistory(newState);
-  }
+    let newList = this.state.likedList.slice();
+    let removed = newList.splice(index, 1);
+    this.state.removeLikeList.push({ items: removed, index: index });
 
-  clearLike() {
-    this.setLikeListWithHistory([]);
-  }
-
-  setLikeListWithHistory(newList) {
-    this.state.likedHistory.push(this.state.likedList);
-    this.state.likedList = newList;
     this.setState({
       ...this.state,
       likedList: newList,
     });
   }
 
-  undoLike() {
-    if (this.state.likedHistory.length == 0) return;
-
+  clearLike() {
+    let newRemovedList = this.state.removeLikeList.slice();
+    newRemovedList.push({ items: this.state.likedList, index: 0 });
     this.setState({
       ...this.state,
-      likedList: this.state.likedHistory.pop(),
+      likedList: [],
+      removeLikeList: newRemovedList,
     });
   }
 
-  addWatch(item) {
-    if (!this.state.watchedList.includes(item)) {
-      let newState = this.state.watchedList.slice();
-      newState.push(item);
-      this.setWatchedListWithHistory(newState);
+  undoLike() {
+    if (this.state.removeLikeList.length === 0) return;
+
+    let toUndo = this.state.removeLikeList.pop();
+
+    let newList = this.state.likedList.slice();
+    newList.splice(toUndo.index, 0, ...toUndo.items);
+
+    this.setState({
+      ...this.state,
+      likedList: newList,
+    });
+  }
+
+  addWatch(movie) {
+    if (!this.state.watchedList.includes(movie)) {
+      this.state.watchedList.push(movie);
+      this.setState({
+        ...this.state,
+        removeWatchList: [],
+      });
     }
   }
 
   removeWatch(index) {
-    let newState = this.state.watchedList.slice();
-    newState.splice(index, 1);
-    this.setWatchedListWithHistory(newState);
-  }
+    let newList = this.state.watchedList.slice();
+    let removed = newList.splice(index, 1);
+    this.state.removeWatchList.push({ items: removed, index: index });
 
-  clearWatch() {
-    this.setWatchedListWithHistory([]);
-  }
-
-  setWatchedListWithHistory(newList) {
-    this.state.watchedHistory.push(this.state.watchedList);
-    this.state.watchedList = newList;
     this.setState({
       ...this.state,
       watchedList: newList,
     });
   }
 
+  clearWatch() {
+    let newRemovedList = this.state.removeWatchList.slice();
+    newRemovedList.push({ items: this.state.watchedList, index: 0 });
+    this.setState({
+      ...this.state,
+      watchedList: [],
+      removeWatchList: newRemovedList,
+    });
+  }
+
   undoWatch() {
-    if (this.state.watchedHistory.length == 0) return;
+    if (this.state.removeWatchList.length === 0) return;
+
+    let toUndo = this.state.removeWatchList.pop();
+
+    let newList = this.state.watchedList.slice();
+    newList.splice(toUndo.index, 0, ...toUndo.items);
 
     this.setState({
       ...this.state,
-      watchedList: this.state.watchedHistory.pop(),
+      watchedList: newList,
     });
   }
 
