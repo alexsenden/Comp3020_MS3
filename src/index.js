@@ -465,17 +465,13 @@ class SearchResultList extends React.Component {
 
     return (
       <div>
-        { movieList.length > 0 
-          ? (
-            <div className="search-result-collection">
-              {listItems}
-            </div>
-          ) : (
-              <p className="no-results-text">
-                No Results Found for "{this.props.searchTerm}"
-              </p>
-          )
-        }
+        {movieList.length > 0 ? (
+          <div className="search-result-collection">{listItems}</div>
+        ) : (
+          <p className="no-results-text">
+            No Results Found for "{this.props.searchTerm}"
+          </p>
+        )}
       </div>
     );
   }
