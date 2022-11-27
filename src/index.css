@@ -250,7 +250,7 @@ video {
   position: absolute;
   overflow: scroll;
   bottom: 0%;
-  max-height: 50%;
+  max-height: 60%;
   width: 40%;
   z-index: 2;
 }
