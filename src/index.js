@@ -666,7 +666,6 @@ class Screen extends React.Component {
     this.state.likedList.push(movie);
     this.setState({
       ...this.state,
-      removeLikeList: [],
     });
   }
 
@@ -699,6 +698,8 @@ class Screen extends React.Component {
     let newList = this.state.likedList.slice();
     newList.splice(toUndo.index, 0, ...toUndo.items);
 
+    newList = Array.from(new Set(newList));
+
     this.setState({
       ...this.state,
       likedList: newList,
@@ -710,7 +711,6 @@ class Screen extends React.Component {
       this.state.watchedList.push(movie);
       this.setState({
         ...this.state,
-        removeWatchList: [],
       });
     }
   }
@@ -743,6 +743,8 @@ class Screen extends React.Component {
 
     let newList = this.state.watchedList.slice();
     newList.splice(toUndo.index, 0, ...toUndo.items);
+
+    newList = Array.from(new Set(newList));
 
     this.setState({
       ...this.state,
