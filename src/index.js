@@ -69,6 +69,11 @@ class SmallIconCollection extends React.Component {
 
 class SidePanel extends React.Component {
   render() {
+    let style =
+      this.props.history.length === 0
+        ? { visibility: "hidden" }
+        : { visivility: "visible" };
+
     return (
       <div
         className="sidepanel"
@@ -102,6 +107,7 @@ class SidePanel extends React.Component {
               className=""
               variant="outline-light"
               onClick={this.props.undoList}
+              style={style}
             >
               <AiOutlineUndo /> Undo
             </Button>
@@ -660,7 +666,6 @@ class Screen extends React.Component {
     this.state.likedList.push(movie);
     this.setState({
       ...this.state,
-      removeLikeList: [],
     });
   }
 
@@ -693,6 +698,8 @@ class Screen extends React.Component {
     let newList = this.state.likedList.slice();
     newList.splice(toUndo.index, 0, ...toUndo.items);
 
+    newList = Array.from(new Set(newList));
+
     this.setState({
       ...this.state,
       likedList: newList,
@@ -704,7 +711,6 @@ class Screen extends React.Component {
       this.state.watchedList.push(movie);
       this.setState({
         ...this.state,
-        removeWatchList: [],
       });
     }
   }
@@ -737,6 +743,8 @@ class Screen extends React.Component {
 
     let newList = this.state.watchedList.slice();
     newList.splice(toUndo.index, 0, ...toUndo.items);
+
+    newList = Array.from(new Set(newList));
 
     this.setState({
       ...this.state,
@@ -857,11 +865,11 @@ class Screen extends React.Component {
             }
             label="Liked Movies"
             movieList={this.state.likedList}
-            f
             removeItem={this.removeLike}
             clearList={this.clearLike}
             undoList={this.undoLike}
             setMovie={this.setCurrentMovie}
+            history={this.state.removeLikeList}
           />
 
           {centreContent}
@@ -878,6 +886,7 @@ class Screen extends React.Component {
             clearList={this.clearWatch}
             undoList={this.undoWatch}
             setMovie={this.setCurrentMovie}
+            history={this.state.removeWatchList}
           />
         </div>
         <div>
